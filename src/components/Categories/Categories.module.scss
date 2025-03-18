@@ -1,0 +1,48 @@
+@import '../../variables';
+
+
+.one_category {
+    background-color: $input;
+    width: auto;
+    text-align: center;
+}
+
+.categories {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.one_category {
+    min-width: fit-content;
+    max-width: 200px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    margin: 10px 0px;
+}
+
+.first_category {
+    background-color: #c1c0c0;
+}
+
+.one_category {
+    position: relative;
+    cursor: pointer;
+}
+
+.close_icon {
+    position: absolute;
+    right: 25px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.one_category:hover .close_icon {
+    opacity: 1;
+}

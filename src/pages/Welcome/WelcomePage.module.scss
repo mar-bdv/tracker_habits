@@ -1,0 +1,155 @@
+@import '../../variables';
+
+body {
+    background-color: $background;
+    font-family: "Lato", sans-serif;
+    color: $text;
+}
+
+::selection {
+    background-color: #4A4A4A;
+    color: #E0E0E0;
+}
+
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.heading {
+    color: $main;
+    font-family: "Rubik Mono One", monospace;
+    font-weight: 300;
+    font-size: 45px;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+.start_text {
+    font-family: "Lato", sans-serif;
+    color: $main;
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    top: 80px;
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+.text {
+    font-family: "Lato", sans-serif;
+    font-size: 14px;
+    width: 341px;
+    text-align: center;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid $border;
+    background-color: $container;
+    border-radius: 39px;
+    max-width: 1071px;
+    height: 722px;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+    gap: 30px;
+}
+
+.block_link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.btn_link {
+    background-color: $main;
+    font-size: 20px;
+    text-decoration: none;
+    border-radius: 15px;
+    padding: 10px 30px;
+    font-family: "Rubik Mono One", monospace;
+    color: $text;
+}
+
+.options_input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid $border;
+    background-color: $container;
+    border-radius: 39px;
+    max-width: 1071px;
+    height: 722px;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+.options {
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+.input {
+    width: 326px;
+    border-radius: 15px;
+    border: 1px solid $border;
+    padding: 15px;
+    font-size: 14px;
+    background-color: $container;
+}
+
+.start_text_signup {
+    top: 30px;
+    font-family: "Lato", sans-serif;
+    color: $main;
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    transform: translateY(-50%);
+    text-align: center;
+}
+
+.text_input {
+    font-size: 16px;
+}
+
+.link {
+    text-decoration: none;
+    color: $text;
+    font-weight: bold;
+}
+
+.descr_input {
+    font-size: 12px;
+}
+
+.text_link {
+    font-size: 16px;
+    margin: 10px;
+}
+
+.block_btns {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,84 @@
+@import '../../variables';
+
+body {
+    color: $text;
+}
+
+.img {
+    width: 67px;
+    height: 67px;
+    border-radius: 100%;
+    object-fit: cover; 
+}
+
+.container {
+    background-color: $container;
+    width: 204px;
+    height: 100vh;
+    margin-top: 20px;
+    border: 1px solid $border;
+    border-radius: 21px;
+    margin-left: 30px;
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+}
+
+.block_avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.block_links {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.link {
+    list-style-type: none;
+    font-size: 16px;
+    padding: 13px;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    color: $text;
+}
+
+.exit {
+    list-style-type: none;
+    font-size: 16px;
+    padding: 13px;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    color: $text;
+}
+
+.link_img {
+    position: absolute;
+    top: 50%;
+    left: 85%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.link:hover .link_img {
+    opacity: 1;
+}
+
+.block_exit {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0px;
+}
+
+.exit {
+    cursor: pointer;
+}

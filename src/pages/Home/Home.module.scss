@@ -1,0 +1,105 @@
+@import '../../variables';
+
+
+.home_container {
+    background-color: $container;
+    border: 1px solid $border;
+    border-radius: 20px;
+    padding: 20px;
+    margin-top: 20px;
+    margin-right: 400px;
+}
+
+.container {
+    display: flex;
+}
+
+.home_container {
+    margin-left: 150px;
+    max-width: 1089px;
+    width: 100%;
+}
+
+.hello_block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.heading {
+    font-family: "Rubik Mono One", monospace;
+    font-size: 35px;
+    margin-bottom: 5px;
+}
+
+.hello_descr {
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 0px;
+}
+
+.heading_span {
+    color: $main;
+}
+
+.two_blocks {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+}
+
+.statistics_container {
+    margin-left: 15px;
+}
+
+.habits_filter {
+    display: flex;
+    
+}
+
+.habits_list {
+    background-color: $container;
+    border: 1px solid $border;
+    border-radius: 16px;
+    max-width: 493px;
+    width: 100%;
+    height: 713px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.habits_text {
+    font-size: 14px;
+}
+
+.habits {
+    flex-grow: 1;
+    width: 100%;
+}
+
+.habits_filter {
+    display: flex;
+    justify-content: space-between;
+}
+
+.streak_container {
+    background-color: $container;
+    border: 1px solid $border;
+    border-radius: 16px;
+    padding: 10px;
+    width: 448px;
+}

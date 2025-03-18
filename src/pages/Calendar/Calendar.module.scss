@@ -1,0 +1,168 @@
+@import '../../variables';
+
+.heading_block {
+    font-size: 35px;    
+    font-family: "Rubik Mono One", monospace;
+    color: $main;
+    font-weight: normal;
+    display: flex;
+    justify-content: center;
+    margin-left: 60px;
+
+    margin-bottom: 5px;
+    margin-top: 13px;
+}
+
+.heading {
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+
+.container {
+    margin-right: 180px;
+
+}
+
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 700px;
+
+    .weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        padding-bottom: 20px;
+        gap: 15px;
+        margin-right: 5px;
+        font-size: 12px;
+    }
+
+    .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 5px;
+        width: 710px;
+    }
+
+    .day {
+        width: 90px;
+        aspect-ratio: 1 / 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid $border;
+        border-radius: 16px;
+        font-size: 16px;
+        background-color: transparent;
+        cursor: pointer;
+        transition: background 0.2s;
+        font-family: "Rubik Mono One", monospace;
+        font-size: 30px;
+
+    
+        &:hover {
+            background-color: #ddd;
+        }
+    
+        &.empty {
+            background-color: transparent;
+        }
+    }
+}
+
+.monthName {
+    color: $main;
+    font-family: "Rubik Mono One", monospace;
+    font-size: 35px;
+}
+
+.arrow {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 20px 0px;
+}
+
+.container_calendar {
+    background-color: $container;
+    border: 1px solid $border;
+    border-radius: 20px;
+    display: flex;
+    min-width: 1200px;
+    margin-left: 50px;
+    height: 800px;
+    padding: 20px;
+
+
+}
+
+.right_block {
+    border: 1px solid $border;
+    border-radius: 16px;
+    margin-left: 40px;
+    height: 770px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 380px;
+    margin-left: 80px;
+    padding: 10px;
+
+}
+
+.date_block {
+    width: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.calendar_block {
+    margin-left: 20px;
+}
+
+.right_date {
+    font-size: 20px;
+    font-family: "Rubik Mono One", monospace;
+
+}
+
+.your_habits {
+    margin-right: auto;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.habits {
+    width: 350px;
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0px 5px;
+}
+
+.block_filters {
+    margin-right: auto;
+    
+}
+
+.moods_block {
+    margin-right: auto;
+    margin-bottom: auto;
+}
+
+.selected {
+    border: 2px solid $main !important;
+}
