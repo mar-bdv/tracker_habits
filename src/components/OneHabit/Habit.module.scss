@@ -8,7 +8,7 @@
     max-width: 430px;
     width: 100%;
     background-color: $background;
-    border: 1px solid $main; // ЛИБО $border если отмечено
+    border: 1px solid $main;
     border-radius: 15px;
     height: 85px;
     position: relative;
@@ -21,7 +21,7 @@
     max-width: 430px;
     width: 100%;
     background-color: $background;
-    border: 1px solid $main; // ЛИБО $border если отмечено
+    border: 1px solid $main;
     border-radius: 15px;
     height: 85px;
     position: relative;
@@ -53,12 +53,12 @@
 }
 
 .checkbox_habit {
-    display: none; /* Скрываем стандартный чекбокс */
+    display: none;
 }
 
 .checkboxLabel {
     position: relative;
-    padding-left: 25px; /* Отступ, чтобы кастомный чекбокс не перекрывал текст */
+    padding-left: 25px;
     cursor: pointer;
 }
 
@@ -66,29 +66,29 @@
     position: absolute;
     left: 0;
     top: 0;
-    width: 17px; /* Ширина чекбокса */
-    height: 17px; /* Высота чекбокса */
-    border-radius: 2px; /* Радиус для округления углов */
-    background-color: #D9D9D9; /* Цвет фона */
+    width: 17px;
+    height: 17px;
+    border-radius: 2px;
+    background-color: #D9D9D9;
     transition: background-color 0.3s, border-color 0.3s;
     margin-top: 10px;
     margin-left: 10px;
 }
 
 .checkbox_habit:checked + .customCheckbox {
-    background-color: #D9D9D9; /* Цвет фона при отметке */
+    background-color: #D9D9D9;
 }
 
 .checkbox_habit:checked + .customCheckbox::after {
     content: '';
     position: absolute;
-    left: 4px; /* Положение галочки */
-    top: 2px; /* Положение галочки */
-    width: 5px; /* Ширина галочки */
-    height: 9px; /* Высота галочки */
+    left: 4px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
     border: solid black;
-    border-width: 0 3px 3px 0; /* Создаем галочку */
-    transform: rotate(45deg); /* Поворачиваем для создания галочки */
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
 }
 
 
@@ -106,3 +106,95 @@
     justify-content: center;
 }
 
+
+.habit {
+    position: relative;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dotsButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px; 
+}
+
+.optionsMenu {
+    position: absolute;
+    right: 10px;
+    top: 35px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    z-index: 10;
+    padding: 5px 0;
+}
+
+.option {
+    background: none;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    font-size: 16px;
+    cursor: pointer;
+    color: #333;
+    transition: background-color 0.2s ease;
+}
+
+.option:hover {
+    background-color: #f1f1f1;
+}
+
+
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal h2 {
+    margin-bottom: 10px;
+}
+
+.modal input,
+.modal select,
+.modal textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.modal button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}

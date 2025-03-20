@@ -6,12 +6,14 @@ import rightArrow from "../../images/right_arrow_month.png"
 import Filters from "../../components/Filters/Filters";
 import Habit from "../../components/OneHabit/Habit";
 import Moods from "../../components/Moods/Moods";
+import { useDispatch, useSelector } from "react-redux";
 
 
 export const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
-
+    const habits = useSelector((state) => state.habits);
+    const dispatch = useDispatch();
 
     const handleDayClick = (day) => {
         if (!day) return; // Игнорируем пустые ячейки
@@ -72,6 +74,7 @@ export const Calendar = () => {
 
     // Объединяем пустые ячейки и дни месяца
     const calendarDays = [...emptyCells, ...daysArray];
+    
     return (
         <div className={styles.container}>
             <div className={styles.heading_block}>
@@ -146,12 +149,10 @@ export const Calendar = () => {
 
                         </div>
                         <div className={styles.habits}>
-                            <Habit style={{ margin: "20px 0px" }} />
-                            <Habit style={{ margin: "20px 0px" }} />
-                            <Habit style={{ margin: "20px 0px" }} />
-                            <Habit style={{ margin: "20px 0px" }} />
-                            <Habit style={{ margin: "20px 0px" }} />
-                            <Habit style={{ margin: "20px 0px" }} />
+
+                            {habits.map((habit) => (
+                                <Habit key={habit.id} habit={habit} style={{ margin: "20px 0px" }} />
+                            ))}
 
                         </div>
 

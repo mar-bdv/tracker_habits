@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AddHabitButton from "../../components/AddHabitButton/AddHabitButton";
 import Categories from "../../components/Categories/Categories";
 import Filters from "../../components/Filters/Filters";
@@ -6,9 +7,29 @@ import Moods from "../../components/Moods/Moods";
 import Habit from "../../components/OneHabit/Habit";
 import Navigation from "../Navigation/Navigation";
 import styles from "./Habits.module.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { addHabit } from "../../store/habitsSlice";
 
 const Habits = () => {
-    
+    // const [habits, setHabits] = useState([]);
+
+    // const addHabit = (name) => {
+    //     const newHabit = {
+    //         id: Date.now(), // Уникальный ID
+    //         name,
+    //         notes: "",
+    //         category: "",
+    //         deadline: "",
+    //     };
+    //     setHabits([...habits, newHabit]);
+    // };
+
+    // console.log("addHabit in Habits:", addHabit);
+    const habits = useSelector((state) => state.habits);
+    const dispatch = useDispatch();
+
+
+
     return (
         <div className={styles.container}>
             <div className={styles.header_block}>
@@ -40,13 +61,12 @@ const Habits = () => {
 
                     <div className={styles.addhabit_container}>
                         <div className={styles.habits}>
-                            <Habit />
-                            <Habit />
-                            <Habit />
-                            <Habit />
+                            {habits.map((habit) => (
+                                <Habit key={habit.id} habit={habit} />
+                            ))}
                         </div>
                         
-                        <AddHabitButton />
+                        <AddHabitButton onAdd={(name) => dispatch(addHabit(name))} />
                     </div>
 
                     <div className={styles.moods_container}>
