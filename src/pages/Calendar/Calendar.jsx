@@ -4,7 +4,7 @@ import styles from "./Calendar.module.scss";
 import leftArrow from "../../images/left_arrow_month.png"
 import rightArrow from "../../images/right_arrow_month.png"
 import Filters from "../../components/Filters/Filters";
-import Habit from "../../components/OneHabit/Habit";
+import Habit from "../../components/Habit/Habit";
 import Moods from "../../components/Moods/Moods";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -151,7 +151,7 @@ export const Calendar = () => {
                         <div className={styles.habits}>
 
                             {habits.map((habit) => (
-                                <Habit key={habit.id} habit={habit} style={{ margin: "20px 0px" }} />
+                                <Habit key={habit.id} habit={habit} style={{ margin: "10px 0px", width: "95%" }} />
                             ))}
 
                         </div>

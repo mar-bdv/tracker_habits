@@ -3,7 +3,7 @@ import AddHabitButton from "../../components/AddHabitButton/AddHabitButton";
 import Filters from "../../components/Filters/Filters";
 import HowManyPercentDone from "../../components/HowManyPercentDone/HowManyPercentDone";
 import Moods from "../../components/Moods/Moods";
-import Habit from "../../components/OneHabit/Habit";
+import Habit from "../../components/Habit/Habit";
 import ShortStatistics from "../../components/ShortStatistics/ShortStatistics";
 import Streak from "../../components/Streak/Streak";
 import Navigation from "../Navigation/Navigation";
@@ -13,23 +13,14 @@ import { addHabit } from "../../store/habitsSlice";
 
 
 const Home = () => {
-
-    // const [habits, setHabits] = useState([]);
-    
-    //     const addHabit = (name) => {
-    //         const newHabit = {
-    //             id: Date.now(), // Уникальный ID
-    //             name,
-    //             notes: "",
-    //             category: "",
-    //             deadline: "",
-    //         };
-    //         setHabits([...habits, newHabit]);
-    //     };
-    
-    const habits = useSelector((state) => state.habits);
     const dispatch = useDispatch();
-    
+
+    // Получаем userId из Redux (или если оно в localStorage, то используем его)
+    const userId = useSelector((state) => state.auth.user?.id);
+    const habits = useSelector((state) => state.habits.habits);
+    const status = useSelector((state) => state.habits.status);
+    const error = useSelector((state) => state.habits.error);
+
 
     return (
         <div className={styles.home_container}>
@@ -50,6 +41,7 @@ const Home = () => {
                     <div className={styles.habits_list}>
                         {/* ПРИВЫЧКИ */}
                         <div className={styles.habits}>
+
                             {habits.map((habit) => (
                                 <Habit key={habit.id} habit={habit} />
                             ))}

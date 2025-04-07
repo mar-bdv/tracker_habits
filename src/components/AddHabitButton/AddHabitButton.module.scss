@@ -2,24 +2,36 @@
 
 .inputContainer {
     position: relative;
-    width: 430px;
-    height: 41px;
+    display: flex;
+    width: 480px;
+    // height: 41px;
 }
 
 .input {
-    background-color: $background;
-    border: 1px solid $main;
-    width: 100%;
-    height: 100%;
+    // background-color: $background;
+    // border: 1px solid $main;
+    // width: 430px;
+    // height: 41px;
+    // border-radius: 10px;
+    // font-size: 16px;
+    background-color: rgb(242, 174, 102, 13%);
+    border: 1px solid #F2AE66;
+    width: 430px;
+    height: 41px;
     border-radius: 10px;
     font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    margin: 20px;
+    padding: 5px 10px;
+
 }
 
 .addButton {
     position: absolute;
     top: 50%;
-    right: 10px; /* Отступ справа */
-    transform: translateY(-50%);  /* Центрируем кнопку по вертикали */
+    right: 40px;
+    transform: translateY(-50%);
     background: none;
     border: none;
     font-size: 20px;
@@ -38,3 +50,4 @@
     margin-bottom: 15px;
     margin: 20px;
 }
+
