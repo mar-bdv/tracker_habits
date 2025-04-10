@@ -29,6 +29,10 @@ export const addHabit = createAsyncThunk(
       .from('habits')
       .insert([habitData]);
 
+    const { data: sessionData } = await supabase.auth.getSession();
+    console.log("auth.uid():", sessionData?.session?.user?.id);
+    console.log("habitData.user_id:", habitData.user_id);
+
     if (error) {
       console.error("Ошибка при добавлении привычки:", error.message); // <-- Лог ошибки
       return thunkAPI.rejectWithValue(error.message);
@@ -65,15 +69,25 @@ export const fetchHabits = createAsyncThunk(
     return data; // Возвращаем данные привычек
   }
 );
-
-
 export const updateHabit = createAsyncThunk(
   'habits/updateHabit',
   async (updatedHabitData, thunkAPI) => {
+    const state = thunkAPI.getState();
+    console.log("state внутри updateHabit:", state);
+
+    const userId = state.auth?.user?.id;
+
     const { data, error } = await supabase
       .from('habits')
-      .upsert([updatedHabitData])  // Используем upsert для обновления, если привычка уже существует
-      .eq('id', updatedHabitData.id);
+      .upsert([
+        {
+          ...updatedHabitData,
+          user_id: updatedHabitData.user_id || userId, // сохраняем user_id
+        },
+      ])
+      .eq('user_id', userId);
+
+      console.log(updatedHabitData)
 
     if (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -82,6 +96,24 @@ export const updateHabit = createAsyncThunk(
     return data;
   }
 );
+
+export const toggleHabit = createAsyncThunk(
+  'habits/toggleHabit',
+  async ({ userId, habitId, completed }, thunkAPI) => {
+    const { data, error } = await supabase
+      .from('habits')
+      .update({ completed }) // обновляем поле completed
+      .eq('id', habitId)
+      .eq('user_id', userId);
+
+    if (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+
+    return { habitId, completed }; // возвращаем только нужное
+  }
+);
+
 
 // Создание слайса для привычек
 const habitsSlice = createSlice({
@@ -104,7 +136,24 @@ const habitsSlice = createSlice({
       .addCase(fetchHabits.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
-      });
+      })
+      .addCase(updateHabit.fulfilled, (state, action) => {
+        const updated = action.payload?.[0]; // ← безопасно достаём
+        if (!updated) return;
+    
+        const index = state.habits.findIndex(h => h.id === updated.id);
+        if (index !== -1) {
+            state.habits[index] = updated;
+        }
+      })
+
+      .addCase(toggleHabit.fulfilled, (state, action) => {
+        const { habitId, completed } = action.payload;
+        const existingHabit = state.habits.find(habit => habit.id === habitId);
+        if (existingHabit) {
+          existingHabit.completed = completed;
+        }
+      })
   },
 });
 

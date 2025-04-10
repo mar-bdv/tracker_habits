@@ -4,21 +4,24 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./Habit.module.scss";
 import threeDotes from '../../images/three_dotes.png'
 import HabitModal from "../../feautures/HabitModal/HabitModal";
+import { addHabit } from "../../habitsThunks";
+import { toggleHabit, updateHabit } from "../../store/habitsSlice";
 
 const Habit = ({ style, habit }) => {
+    
+
+
     const [menuVisible, setMenuVisible] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
-
     const [title, setTitle] = useState(habit.title);
     const [notes, setNotes] = useState(habit.notes || "");
     const [category, setCategory] = useState(habit.category || "");
     const [deadline, setDeadline] = useState(habit.deadline || "");
 
-    console.log(habit.title, habit.notes, habit.category)
-
-    
-
     const dispatch = useDispatch();
+    const userId = useSelector((state) => state.user?.id);
+
+    // Определение рефов
     const menuRef = useRef(null);
     const dotsButtonRef = useRef(null);
     const modalRef = useRef(null);
@@ -34,7 +37,6 @@ const Habit = ({ style, habit }) => {
         }
     };
 
-    // Закрытие меню при клике вне его
     const handleClickOutside = useCallback((event) => {
         if (
             menuRef.current &&
@@ -46,7 +48,6 @@ const Habit = ({ style, habit }) => {
         }
     }, []);
 
-    // Закрытие модального окна при клике вне его
     const handleModalClickOutside = useCallback((event) => {
         if (modalRef.current && !modalRef.current.contains(event.target)) {
             setModalVisible(false);
@@ -62,14 +63,24 @@ const Habit = ({ style, habit }) => {
         };
     }, [handleClickOutside, handleModalClickOutside]);
 
-    // Функция для сохранения изменений
     const handleSave = () => {
-        // dispatch(updateHabit({ id: habit.id, updatedData: { name: title, notes, category, deadline } }));
-        setModalVisible(false); // Закрываем модалку после сохранения
-    };
-
-    const userId = useSelector((state) => state.user?.id); 
+        const updatedHabitData = {
+            id: habit.id,
+            title: title || "", // обязательно строка
+            notes: notes || "", // обязательно строка
+            category: category || "", // обязательно строка
+            deadline: deadline || null, // или строка в формате "YYYY-MM-DD"
+            user_id: userId,
+        };
     
+        if (!habit.id) {
+            dispatch(addHabit(updatedHabitData));
+        } else {
+            dispatch(updateHabit(updatedHabitData));
+        }
+    
+        setModalVisible(false);
+    };
 
     return (
         <>
@@ -79,7 +90,7 @@ const Habit = ({ style, habit }) => {
                         type="checkbox"
                         checked={habit.completed}
                         className={styles.checkbox_habit}
-                        // onChange={() => dispatch(toggleHabit({ userId, habitId: habit.id, completed: !habit.completed }))}
+                        onChange={() => dispatch(toggleHabit({ userId, habitId: habit.id, completed: !habit.completed }))}
                     />
                     <span className={styles.customCheckbox}></span>
                 </label>
