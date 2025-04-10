@@ -53,36 +53,6 @@ const AddHabitButton = () => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.user); // Получаем текущего пользователя
 
-    // const handleAddHabit = () => {
-    //     if (!user) {
-    //         alert("Вы не авторизованы!");
-    //         return;
-    //     }
-
-    //     if (habitName.trim() !== "") {
-    //         dispatch(addHabit({ title: habitName })); // user_id добавится автоматически
-    //         setHabitName("");
-    //         setIsEditing(false);
-    //     }
-
-    //     console.log({ title: habitName })
-    // };
-
-
-    // const handleAddHabit = () => {
-    //     if (!user) {
-    //         alert("Вы не авторизованы!");
-    //         return;
-    //     }
-    
-    
-    //     if (habitName.trim() !== "") {
-    //         dispatch(addHabit({ title: habitName, user_id: user.id }));
-    //         setHabitName("");
-    //         setIsEditing(false);
-    //     }
-    // };
-
     const handleAddHabit = () => {
         if (!user) {
           console.error("Ошибка: user отсутствует!"); // <-- Добавь этот лог

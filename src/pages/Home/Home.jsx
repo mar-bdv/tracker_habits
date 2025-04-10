@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddHabitButton from "../../components/AddHabitButton/AddHabitButton";
 import Filters from "../../components/Filters/Filters";
 import HowManyPercentDone from "../../components/HowManyPercentDone/HowManyPercentDone";
@@ -9,7 +9,7 @@ import Streak from "../../components/Streak/Streak";
 import Navigation from "../Navigation/Navigation";
 import styles from "./Home.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { addHabit } from "../../store/habitsSlice";
+import { addHabit, fetchHabits } from "../../store/habitsSlice";
 
 
 const Home = () => {
@@ -20,7 +20,11 @@ const Home = () => {
     const habits = useSelector((state) => state.habits.habits);
     const status = useSelector((state) => state.habits.status);
     const error = useSelector((state) => state.habits.error);
-
+    useEffect(() => {
+        if (userId) {
+            dispatch(fetchHabits(userId));
+        }
+    }, [userId, dispatch]);
 
     return (
         <div className={styles.home_container}>

@@ -66,17 +66,23 @@ const Habit = ({ style, habit }) => {
     const handleSave = () => {
         const updatedHabitData = {
             id: habit.id,
-            title: title || "", // обязательно строка
-            notes: notes || "", // обязательно строка
-            category: category || "", // обязательно строка
-            deadline: deadline || null, // или строка в формате "YYYY-MM-DD"
+            title: title || "",
+            notes: notes || "",
+            category: category || "",
+            deadline: deadline || null,
             user_id: userId,
         };
     
         if (!habit.id) {
             dispatch(addHabit(updatedHabitData));
         } else {
-            dispatch(updateHabit(updatedHabitData));
+            dispatch(updateHabit(updatedHabitData)); // обновляем привычку
+            // Обновляем локально, чтобы UI сразу отобразил изменения
+            const updatedHabit = { ...habit, ...updatedHabitData };
+            dispatch({
+                type: 'habits/updateHabitImmediate', // добавь новый action для немедленного обновления в UI
+                payload: updatedHabit
+            });
         }
     
         setModalVisible(false);

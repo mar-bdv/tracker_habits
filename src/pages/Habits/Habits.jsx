@@ -104,13 +104,13 @@ const Habits = () => {
     const habits = useSelector((state) => state.habits.habits);
     const status = useSelector((state) => state.habits.status);
     const error = useSelector((state) => state.habits.error);
-  
+    const authStatus = useSelector((state) => state.auth.status);
+
     useEffect(() => {
-      if (userId) {
-        // Загружаем привычки только если userId существует
+      if (userId && habits.length === 0) {
         dispatch(fetchHabits(userId));
       }
-    }, [dispatch, userId]);
+    }, [userId, habits.length, dispatch]);
   
     if (status === 'loading') {
       return <p>Загрузка...</p>;
@@ -121,14 +121,71 @@ const Habits = () => {
     }
   
     return (
-      <div>
-        <h2>Мои привычки</h2>
-        <div>
-          {habits.map((habit) => (
-            <Habit key={habit.id} habit={habit} />
-          ))}
+      // <div>
+      //   <h2>Мои привычки</h2>
+      //   <div>
+      //     {habits.map((habit) => (
+      //       <Habit key={habit.id} habit={habit} />
+      //     ))}
+      //   </div>
+
+        <div className={styles.container}>
+          <div className={styles.header_block}>
+            <h2 className={styles.heading}>Ваши привычки</h2>
+          </div>
+
+          <div className={styles.habits_block}>
+            <div className={styles.left_block}>
+              <div>
+                <input 
+                  type="text" 
+                  placeholder="Поиск привычек"
+                  className={styles.input}
+                />
+              </div>
+            </div>
+          
+
+          <div className={styles.categories_block}>
+            <p>Категории</p>
+            <Categories />
+            <button className={styles.filter_button}>добавить свою категорию</button>
+          </div>
+
+            <div className={styles.right_block}>
+              <div>
+                <Filters />
+              </div>
+            
+
+
+              <div className={styles.addhabit_container}>
+                <div className={styles.habits}>
+
+                  {habits.length > 0 ? (
+                    habits.map((habit) => (
+                      <Habit key={habit.id} habit={habit} />
+                    ))
+                  ) : (
+                    <p>У вас пока нет привычек.</p>
+                  )}
+
+                </div>
+                <AddHabitButton userId={userId} />
+              </div>
+
+              <div className={styles.moods_container}>
+                <HowManyPercentDone />
+                <p>Какое у вас сегодня настроение?</p>
+                <Moods />
+              </div>
+
+            </div>
+          </div>
         </div>
-      </div>
+
+
+
     );
   };
 

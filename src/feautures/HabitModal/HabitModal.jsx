@@ -27,25 +27,6 @@ const HabitModal = ({ habit, isVisible, onClose, onSave, title, setTitle, notes,
 
     if (!isVisible) return null;
     
-    // const handleSave = () => {
-    //     // Данные, которые нужно обновить для привычки
-    //     const updatedHabitData = {
-    //         id: habit.id,        // Идентификатор привычки для обновления
-    //         title,               // Новое название
-    //         notes,               // Новые заметки
-    //         category,            // Новая категория
-    //         deadline,            // Новый дедлайн
-    //         user_id: userId      // Добавляем userId
-    //     };
-    
-    //     // Если ты добавляешь привычку, используешь addHabit
-    //     if (!habit.id) {
-    //         dispatch(addHabit(updatedHabitData));  // Добавление новой привычки
-    //     } else {
-    //         dispatch(updateHabit(updatedHabitData));  // Обновление существующей привычки
-    //     }
-    
-    // };
 
     return (
         <div className={styles.modalOverlay}>
