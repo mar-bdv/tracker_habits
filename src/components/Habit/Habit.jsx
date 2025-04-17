@@ -5,7 +5,7 @@ import styles from "./Habit.module.scss";
 import threeDotes from '../../images/three_dotes.png'
 import HabitModal from "../../feautures/HabitModal/HabitModal";
 import { addHabit } from "../../habitsThunks";
-import { toggleHabit, updateHabit } from "../../store/habitsSlice";
+import { toggleHabit, toggleHabitForDate, updateHabit } from "../../store/habitsSlice";
 
 const Habit = ({ style, habit }) => {
     
@@ -19,7 +19,8 @@ const Habit = ({ style, habit }) => {
     const [deadline, setDeadline] = useState(habit.deadline || "");
 
     const dispatch = useDispatch();
-    const userId = useSelector((state) => state.user?.id);
+   // const userId = useSelector((state) => state.user?.id);
+    const { id: userId } = useSelector(state => state.auth.user) || {};
 
     // Определение рефов
     const menuRef = useRef(null);
@@ -96,7 +97,15 @@ const Habit = ({ style, habit }) => {
                         type="checkbox"
                         checked={habit.completed}
                         className={styles.checkbox_habit}
-                        onChange={() => dispatch(toggleHabit({ userId, habitId: habit.id, completed: !habit.completed }))}
+                        // onChange={() => dispatch(toggleHabit({ userId, habitId: habit.id, completed: !habit.completed }))}
+                        onChange={() => {
+                            const today = new Date().toISOString().split('T')[0]; // формат YYYY-MM-DD
+                            dispatch(toggleHabitForDate({
+                                userId,
+                                habitId: habit.id,
+                                date: today
+                            }));
+                        }}
                     />
                     <span className={styles.customCheckbox}></span>
                 </label>

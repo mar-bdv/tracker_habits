@@ -71,21 +71,65 @@ export const deleteHabit = createAsyncThunk(
 
 
 // Асинхронное действие для получения привычек пользователя
+// export const fetchHabits = createAsyncThunk(
+//   'habits/fetchHabits',
+//   async (userId, thunkAPI) => {
+//     const { data, error } = await supabase
+//       .from('habits')
+//       .select('*')
+//       .eq('user_id', userId); // Получаем привычки для текущего пользователя
+
+//     if (error) {
+//       return thunkAPI.rejectWithValue(error.message);
+//     }
+
+//     return data; // Возвращаем данные привычек
+//   }
+// );
+
 export const fetchHabits = createAsyncThunk(
   'habits/fetchHabits',
   async (userId, thunkAPI) => {
-    const { data, error } = await supabase
-      .from('habits')
-      .select('*')
-      .eq('user_id', userId); // Получаем привычки для текущего пользователя
+    try {
+      const today = new Date().toISOString().split('T')[0];  // формат YYYY-MM-DD
 
-    if (error) {
+      // Получаем все привычки пользователя
+      const { data: habits, error: habitsError } = await supabase
+        .from('habits')
+        .select('*')
+        .eq('user_id', userId);
+
+      if (habitsError) {
+        return thunkAPI.rejectWithValue(habitsError.message);
+      }
+
+      // Получаем выполнения на сегодня
+      const { data: completions, error: completionsError } = await supabase
+        .from('habit_completions')
+        .select('habit_id')
+        .eq('user_id', userId)
+        .eq('date', today);
+
+      if (completionsError) {
+        return thunkAPI.rejectWithValue(completionsError.message);
+      }
+
+      // Список habit_id которые выполнены сегодня
+      const completedIds = completions.map(c => c.habit_id);
+
+      // Добавляем свойство completed для каждой привычки
+      const habitsWithCompleted = habits.map(habit => ({
+        ...habit,
+        completed: completedIds.includes(habit.id)
+      }));
+
+      return habitsWithCompleted;
+    } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
-
-    return data; // Возвращаем данные привычек
   }
 );
+
 
 export const updateHabit = createAsyncThunk(
   'habits/updateHabit',
@@ -129,6 +173,41 @@ export const toggleHabit = createAsyncThunk(
     }
 
     return { habitId, completed }; // возвращаем только нужное
+  }
+);
+
+export const toggleHabitForDate = createAsyncThunk(
+  'habits/toggleHabitForDate',
+  async ({ userId, habitId, date }, thunkAPI) => {
+    const { data, error } = await supabase
+      .from('habit_completions')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('habit_id', habitId)
+      .eq('date', date);
+
+    if (error) return thunkAPI.rejectWithValue(error.message);
+
+    if (data.length > 0) {
+      // если запись уже существует — удаляем
+      const { error: deleteError } = await supabase
+        .from('habit_completions')
+        .delete()
+        .eq('id', data[0].id);
+
+      if (deleteError) return thunkAPI.rejectWithValue(deleteError.message);
+
+      return { habitId, date, completed: false };
+    } else {
+      // если записи нет — добавляем
+      const { error: insertError } = await supabase
+        .from('habit_completions')
+        .insert([{ user_id: userId, habit_id: habitId, date }]);
+
+      if (insertError) return thunkAPI.rejectWithValue(insertError.message);
+
+      return { habitId, date, completed: true };
+    }
   }
 );
 
@@ -179,7 +258,17 @@ const habitsSlice = createSlice({
         if (index !== -1) {
             state.habits[index] = updatedHabit; // Немедленно обновляем привычку в стейте
         }
-    });
+    })
+
+    .addCase(toggleHabitForDate.fulfilled, (state, action) => {
+      const { habitId, completed } = action.payload;
+      const habit = state.habits.find(h => h.id === habitId);
+      if (habit) {
+        habit.completed = completed;
+      }
+    })
+    
+    
   },
 });
 

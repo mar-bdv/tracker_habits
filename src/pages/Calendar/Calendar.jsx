@@ -7,12 +7,12 @@ import Filters from "../../components/Filters/Filters";
 import Habit from "../../components/Habit/Habit";
 import Moods from "../../components/Moods/Moods";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchHabits } from "../../store/habitsSlice";
 
 
 export const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
-    const habits = useSelector((state) => state.habits);
     const dispatch = useDispatch();
 
     const handleDayClick = (day) => {
@@ -74,6 +74,21 @@ export const Calendar = () => {
 
     // Объединяем пустые ячейки и дни месяца
     const calendarDays = [...emptyCells, ...daysArray];
+
+
+
+    // Получаем userId из Redux (или если оно в localStorage, то используем его)
+    const userId = useSelector((state) => state.auth.user?.id);
+    const habits = useSelector((state) => state.habits.habits);
+    const status = useSelector((state) => state.habits.status);
+    const error = useSelector((state) => state.habits.error);
+    const authStatus = useSelector((state) => state.auth.status);
+
+    useEffect(() => {
+        if (userId && habits.length === 0) {
+        dispatch(fetchHabits(userId));
+        }
+    }, [userId, habits.length, dispatch]);
     
     return (
         <div className={styles.container}>
