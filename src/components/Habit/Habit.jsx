@@ -5,12 +5,9 @@ import styles from "./Habit.module.scss";
 import threeDotes from '../../images/three_dotes.png'
 import HabitModal from "../../feautures/HabitModal/HabitModal";
 import { addHabit } from "../../habitsThunks";
-import { toggleHabit, toggleHabitForDate, updateHabit } from "../../store/habitsSlice";
+import { deleteHabit, toggleHabit, toggleHabitForDate, updateHabit } from "../../store/habitsSlice";
 
 const Habit = ({ style, habit }) => {
-    
-
-
     const [menuVisible, setMenuVisible] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [title, setTitle] = useState(habit.title);
@@ -35,6 +32,13 @@ const Habit = ({ style, habit }) => {
         setMenuVisible(false);
         if (option === "edit") {
             setModalVisible(true);
+        }
+    };
+
+    const handleDelete = () => {
+        if (window.confirm("Точно удалить привычку?")) {
+            dispatch(deleteHabit(habit.id));
+            setMenuVisible(false);
         }
     };
 
@@ -127,7 +131,7 @@ const Habit = ({ style, habit }) => {
                         <button className={styles.option} onClick={() => handleOptionClick("edit")}>
                             Изменить
                         </button>
-                        <button className={styles.option} onClick={() => console.log("Удалить")}>
+                        <button className={styles.option} onClick={handleDelete}>
                             Удалить
                         </button>
                     </div>

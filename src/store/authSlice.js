@@ -196,12 +196,22 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
 
-      .addCase(getCurrentUser.fulfilled, (state, action) => {
-        state.user = action.payload;
-      })
-
       .addCase(signOutUser.fulfilled, (state) => {
         state.user = null;
+      })
+
+      .addCase(getCurrentUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCurrentUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(getCurrentUser.rejected, (state, action) => {
+        state.loading = false;
+        state.user = null;
+        state.error = action.payload;
       });
   },
 });

@@ -85,10 +85,24 @@ export const Calendar = () => {
     const authStatus = useSelector((state) => state.auth.status);
 
     useEffect(() => {
+
         if (userId && habits.length === 0) {
-        dispatch(fetchHabits(userId));
+            dispatch(fetchHabits(userId));
         }
     }, [userId, habits.length, dispatch]);
+
+
+    const filteredHabits = habits.filter((habit) => {
+        const selected = new Date(selectedDate).setHours(0, 0, 0, 0);
+        const start = new Date(habit.created_at).setHours(0, 0, 0, 0);
+        const end = habit.deadline ? new Date(habit.deadline).setHours(0, 0, 0, 0) : null;
+    
+        if (!end) {
+            return selected >= start;
+        } else {
+            return selected >= start && selected <= end;
+        }
+    });
     
     return (
         <div className={styles.container}>
@@ -165,9 +179,16 @@ export const Calendar = () => {
                         </div>
                         <div className={styles.habits}>
 
-                            {habits.map((habit) => (
+                            {/* {habits.map((habit) => (
                                 <Habit key={habit.id} habit={habit} style={{ margin: "10px 0px", width: "95%" }} />
-                            ))}
+                            ))} */}
+                            {filteredHabits.length > 0 ? (
+                                filteredHabits.map((habit) => (
+                                    <Habit key={habit.id} habit={habit} style={{ margin: "10px 0px", width: "95%" }} />
+                                ))
+                            ) : (
+                                <p>На эту дату привычек нет.</p>
+                            )}
 
                         </div>
 
