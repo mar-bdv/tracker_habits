@@ -10,6 +10,7 @@ import Navigation from "../Navigation/Navigation";
 import styles from "./Home.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { addHabit, fetchHabits } from "../../store/habitsSlice";
+import { getLocalDateString } from "../../utils/date";
 
 
 const Home = () => {
@@ -20,11 +21,12 @@ const Home = () => {
     const habits = useSelector((state) => state.habits.habits);
     const status = useSelector((state) => state.habits.status);
     const error = useSelector((state) => state.habits.error);
+    
     useEffect(() => {
-        if (userId) {
-            dispatch(fetchHabits(userId));
-        }
-    }, [userId, dispatch]);
+        dispatch(fetchHabits(userId))
+    }, [userId, habits.length, dispatch]);
+
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     return (
         <div className={styles.home_container}>
@@ -47,7 +49,7 @@ const Home = () => {
                         <div className={styles.habits}>
 
                             {habits.map((habit) => (
-                                <Habit key={habit.id} habit={habit} />
+                                <Habit key={habit.id} habit={habit} selectedDate={getLocalDateString(selectedDate)}/>
                             ))}
 
                         </div>

@@ -8,6 +8,7 @@ import Habit from "../../components/Habit/Habit";
 import Moods from "../../components/Moods/Moods";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHabits } from "../../store/habitsSlice";
+import { getLocalDateString } from "../../utils/date";
 
 
 export const Calendar = () => {
@@ -184,7 +185,12 @@ export const Calendar = () => {
                             ))} */}
                             {filteredHabits.length > 0 ? (
                                 filteredHabits.map((habit) => (
-                                    <Habit key={habit.id} habit={habit} style={{ margin: "10px 0px", width: "95%" }} />
+                                    <Habit 
+                                        key={habit.id} 
+                                        habit={habit} 
+                                        style={{ margin: "10px 0px", width: "95%" }} 
+                                        selectedDate={getLocalDateString(selectedDate)} // строка "YYYY-MM-DD"
+                                    />
                                 ))
                             ) : (
                                 <p>На эту дату привычек нет.</p>

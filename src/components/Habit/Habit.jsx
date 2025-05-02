@@ -5,157 +5,163 @@ import styles from "./Habit.module.scss";
 import threeDotes from '../../images/three_dotes.png'
 import HabitModal from "../../feautures/HabitModal/HabitModal";
 import { addHabit } from "../../habitsThunks";
-import { deleteHabit, toggleHabit, toggleHabitForDate, updateHabit } from "../../store/habitsSlice";
+import { deleteHabit, toggleHabit, toggleHabitForDate, updateHabit, updateHabitImmediate } from "../../store/habitsSlice";
+import { getLocalDateString } from "../../utils/date";
 
-const Habit = ({ style, habit }) => {
+const Habit = ({ style, habit, selectedDate }) => {
     const [menuVisible, setMenuVisible] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [title, setTitle] = useState(habit.title);
     const [notes, setNotes] = useState(habit.notes || "");
     const [category, setCategory] = useState(habit.category || "");
     const [deadline, setDeadline] = useState(habit.deadline || "");
-
+  
     const dispatch = useDispatch();
-   // const userId = useSelector((state) => state.user?.id);
-    const { id: userId } = useSelector(state => state.auth.user) || {};
-
-    // Определение рефов
+    const { id: userId } = useSelector((state) => state.auth.user) || {};
+  
     const menuRef = useRef(null);
     const dotsButtonRef = useRef(null);
     const modalRef = useRef(null);
-
+  
     const handleDotsClick = () => {
-        setMenuVisible((prev) => !prev);
+      setMenuVisible((prev) => !prev);
     };
-
+  
     const handleOptionClick = (option) => {
-        setMenuVisible(false);
-        if (option === "edit") {
-            setModalVisible(true);
-        }
+      setMenuVisible(false);
+      if (option === "edit") {
+        setModalVisible(true);
+      }
     };
-
+  
     const handleDelete = () => {
-        if (window.confirm("Точно удалить привычку?")) {
-            dispatch(deleteHabit(habit.id));
-            setMenuVisible(false);
-        }
+      if (window.confirm("Точно удалить привычку?")) {
+        dispatch(deleteHabit(habit.id));
+        setMenuVisible(false);
+      }
     };
-
+  
     const handleClickOutside = useCallback((event) => {
-        if (
-            menuRef.current &&
-            !menuRef.current.contains(event.target) &&
-            dotsButtonRef.current &&
-            !dotsButtonRef.current.contains(event.target)
-        ) {
-            setMenuVisible(false);
-        }
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        dotsButtonRef.current &&
+        !dotsButtonRef.current.contains(event.target)
+      ) {
+        setMenuVisible(false);
+      }
     }, []);
-
+  
     const handleModalClickOutside = useCallback((event) => {
-        if (modalRef.current && !modalRef.current.contains(event.target)) {
-            setModalVisible(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        document.addEventListener("mousedown", handleClickOutside);
-        document.addEventListener("mousedown", handleModalClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-            document.removeEventListener("mousedown", handleModalClickOutside);
-        };
-    }, [handleClickOutside, handleModalClickOutside]);
-
-    const handleSave = () => {
-        const updatedHabitData = {
-            id: habit.id,
-            title: title || "",
-            notes: notes || "",
-            category: category || "",
-            deadline: deadline || null,
-            user_id: userId,
-        };
-    
-        if (!habit.id) {
-            dispatch(addHabit(updatedHabitData));
-        } else {
-            dispatch(updateHabit(updatedHabitData)); // обновляем привычку
-            // Обновляем локально, чтобы UI сразу отобразил изменения
-            const updatedHabit = { ...habit, ...updatedHabitData };
-            dispatch({
-                type: 'habits/updateHabitImmediate', // добавь новый action для немедленного обновления в UI
-                payload: updatedHabit
-            });
-        }
-    
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
         setModalVisible(false);
+      }
+    }, []);
+  
+    useEffect(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("mousedown", handleModalClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+        document.removeEventListener("mousedown", handleModalClickOutside);
+      };
+    }, [handleClickOutside, handleModalClickOutside]);
+  
+    const handleSave = () => {
+      const updatedHabitData = {
+        id: habit.id,
+        title: title || "",
+        notes: notes || "",
+        category: category || "",
+        deadline: deadline || null,
+        user_id: userId,
+      };
+  
+      // dispatch(updateHabit(updatedHabitData)).then((action) => {
+      //   if (updateHabit.fulfilled.match(action)) {
+      //     const updated = action.payload[0];
+      //     dispatch(updateHabitImmediate(updated));
+      //   }
+      // });
+      dispatch(updateHabit(updatedHabitData))
+        .then((action) => {
+          if (updateHabit.fulfilled.match(action) && action.payload) {
+            // теперь payload — это сразу объект обновлённой привычки
+            dispatch(updateHabitImmediate(action.payload));
+          }
+        })
+        .catch((err) => {
+          console.error("Не удалось обновить привычку:", err);
+        });
+  
+      setModalVisible(false);
     };
+  
+    const currentDate = selectedDate || getLocalDateString();  
+  
+
 
     return (
-        <>
-            <div className={styles.habit} style={style}>
-                <label className={styles.checkboxLabel}>
-                    <input
-                        type="checkbox"
-                        checked={habit.completed}
-                        className={styles.checkbox_habit}
-                        // onChange={() => dispatch(toggleHabit({ userId, habitId: habit.id, completed: !habit.completed }))}
-                        onChange={() => {
-                            const today = new Date().toISOString().split('T')[0]; // формат YYYY-MM-DD
-                            dispatch(toggleHabitForDate({
-                                userId,
-                                habitId: habit.id,
-                                date: today
-                            }));
-                        }}
-                    />
-                    <span className={styles.customCheckbox}></span>
-                </label>
-                <div className={styles.habit_text}>
-                    <p className={styles.name_habit}>{habit.title}</p>
-                    {habit.notes && <p className={styles.notes_habit}>{habit.notes}</p>}
-                    <div className={styles.habit_category_container}>
-                        {habit.deadline && <p className={styles.deadline_habit}>До {new Date(habit.deadline).toLocaleDateString()}</p>}
-                        {habit.category && <p className={styles.category_habit}>{habit.category}</p>}
-                    </div>
-
-                </div>
-                <button ref={dotsButtonRef} className={styles.dotsButton} onClick={handleDotsClick}>
-                    <img src={threeDotes} alt="Меню" />
-                </button>
-
-                {menuVisible && (
-                    <div ref={menuRef} className={styles.optionsMenu}>
-                        <button className={styles.option} onClick={() => handleOptionClick("edit")}>
-                            Изменить
-                        </button>
-                        <button className={styles.option} onClick={handleDelete}>
-                            Удалить
-                        </button>
-                    </div>
-                )}
-            </div>
-
-            {/* Используем новый компонент для модального окна */}
-            <HabitModal
-                habit={habit}
-                isVisible={modalVisible}
-                onClose={() => setModalVisible(false)}
-                onSave={handleSave}
-                title={title}
-                setTitle={setTitle}
-                notes={notes}
-                setNotes={setNotes}
-                category={category}
-                setCategory={setCategory}
-                deadline={deadline}
-                setDeadline={setDeadline}
+      <>
+        <div className={styles.habit} style={style}>
+          <label className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              checked={habit.completedDates?.[currentDate] || false} 
+              className={styles.checkbox_habit}
+              onChange={() => {
+                dispatch(
+                  toggleHabitForDate({
+                    userId,
+                    habitId: habit.id,
+                    date: currentDate,
+                  })
+                );
+              }}
             />
-        </>
-
+            <span className={styles.customCheckbox}></span>
+          </label>
+          <div className={styles.habit_text}>
+            <p className={styles.name_habit}>{habit.title}</p>
+            {habit.notes && <p className={styles.notes_habit}>{habit.notes}</p>}
+            <div className={styles.habit_category_container}>
+              {habit.deadline && (
+                <p className={styles.deadline_habit}>
+                  До {new Date(habit.deadline).toLocaleDateString()}
+                </p>
+              )}
+              {habit.category && <p className={styles.category_habit}>{habit.category}</p>}
+            </div>
+          </div>
+          <button ref={dotsButtonRef} className={styles.dotsButton} onClick={handleDotsClick}>
+            <img src={threeDotes} alt="Меню" />
+          </button>
+  
+          {menuVisible && (
+            <div ref={menuRef} className={styles.optionsMenu}>
+              <button className={styles.option} onClick={() => handleOptionClick("edit")}>Изменить</button>
+              <button className={styles.option} onClick={handleDelete}>Удалить</button>
+            </div>
+          )}
+        </div>
+  
+        <HabitModal
+          habit={habit}
+          isVisible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onSave={handleSave}
+          title={title}
+          setTitle={setTitle}
+          notes={notes}
+          setNotes={setNotes}
+          category={category}
+          setCategory={setCategory}
+          deadline={deadline}
+          setDeadline={setDeadline}
+        />
+      </>
     );
-};
-
+  };
+  
 export default Habit;
+  
