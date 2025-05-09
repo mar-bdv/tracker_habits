@@ -10,6 +10,7 @@ import styles from "./Habits.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { addHabit, fetchHabits } from "../../store/habitsSlice";
 import { getUserHabits } from "../../habitsThunks";
+import { fetchCategories } from "../../store/categoriesSlice";
 
 
 const Habits = () => {
@@ -21,9 +22,11 @@ const Habits = () => {
     const status = useSelector((state) => state.habits.status);
     const error = useSelector((state) => state.habits.error);
     const authStatus = useSelector((state) => state.auth.status);
+    const [filterCats, setFilterCats] = useState([]);
 
     useEffect(() => {
       dispatch(fetchHabits(userId))
+      dispatch(fetchCategories(userId));
     }, [userId, habits.length, dispatch]);
   
     if (status === 'loading') {
@@ -49,6 +52,7 @@ const Habits = () => {
           </div>
 
           <div className={styles.habits_block}>
+            
             <div className={styles.left_block}>
               <div>
                 <input 
@@ -57,14 +61,13 @@ const Habits = () => {
                   className={styles.input}
                 />
               </div>
-            </div>
-          
 
-          <div className={styles.categories_block}>
-            <p>Категории</p>
-            <Categories />
-            <button className={styles.filter_button}>добавить свою категорию</button>
-          </div>
+              <div className={styles.categories_block}>
+                <p>Категории</p>
+                <Categories onFilterChange={setFilterCats} />                
+                <button className={styles.filter_button}>добавить свою категорию</button>
+              </div>
+            </div>
 
             <div className={styles.right_block}>
               <div>

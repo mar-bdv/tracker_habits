@@ -7,6 +7,7 @@ import HabitModal from "../../feautures/HabitModal/HabitModal";
 import { addHabit } from "../../habitsThunks";
 import { deleteHabit, toggleHabit, toggleHabitForDate, updateHabit, updateHabitImmediate } from "../../store/habitsSlice";
 import { getLocalDateString } from "../../utils/date";
+import { fetchCategories } from "../../store/categoriesSlice";
 
 const Habit = ({ style, habit, selectedDate }) => {
     const [menuVisible, setMenuVisible] = useState(false);
@@ -18,6 +19,14 @@ const Habit = ({ style, habit, selectedDate }) => {
   
     const dispatch = useDispatch();
     const { id: userId } = useSelector((state) => state.auth.user) || {};
+    const { categories, status } = useSelector((state) => state.categories);
+
+    useEffect(() => {
+      if (userId && status === "idle") {
+        dispatch(fetchCategories(userId));
+      }
+    }, [dispatch, userId, status]);
+
   
     const menuRef = useRef(null);
     const dotsButtonRef = useRef(null);
@@ -155,6 +164,7 @@ const Habit = ({ style, habit, selectedDate }) => {
           notes={notes}
           setNotes={setNotes}
           category={category}
+          categories={categories}
           setCategory={setCategory}
           deadline={deadline}
           setDeadline={setDeadline}

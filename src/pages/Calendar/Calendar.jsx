@@ -9,6 +9,7 @@ import Moods from "../../components/Moods/Moods";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHabits } from "../../store/habitsSlice";
 import { getLocalDateString } from "../../utils/date";
+import { fetchCategories } from "../../store/categoriesSlice";
 
 
 export const Calendar = () => {
@@ -88,6 +89,7 @@ export const Calendar = () => {
     useEffect(() => {
 
         if (userId && habits.length === 0) {
+            dispatch(fetchCategories(userId));
             dispatch(fetchHabits(userId));
         }
     }, [userId, habits.length, dispatch]);

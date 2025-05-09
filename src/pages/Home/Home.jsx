@@ -11,6 +11,7 @@ import styles from "./Home.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { addHabit, fetchHabits } from "../../store/habitsSlice";
 import { getLocalDateString } from "../../utils/date";
+import { fetchCategories } from "../../store/categoriesSlice";
 
 
 const Home = () => {
@@ -21,9 +22,10 @@ const Home = () => {
     const habits = useSelector((state) => state.habits.habits);
     const status = useSelector((state) => state.habits.status);
     const error = useSelector((state) => state.habits.error);
-    
+
     useEffect(() => {
         dispatch(fetchHabits(userId))
+        dispatch(fetchCategories(userId));
     }, [userId, habits.length, dispatch]);
 
     const [selectedDate, setSelectedDate] = useState(new Date());
