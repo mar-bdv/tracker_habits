@@ -85,13 +85,7 @@ const Habit = ({ style, habit, selectedDate }) => {
         deadline: deadline || null,
         user_id: userId,
       };
-  
-      // dispatch(updateHabit(updatedHabitData)).then((action) => {
-      //   if (updateHabit.fulfilled.match(action)) {
-      //     const updated = action.payload[0];
-      //     dispatch(updateHabitImmediate(updated));
-      //   }
-      // });
+
       dispatch(updateHabit(updatedHabitData))
         .then((action) => {
           if (updateHabit.fulfilled.match(action) && action.payload) {

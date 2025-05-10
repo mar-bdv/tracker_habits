@@ -52,11 +52,11 @@ const SignUp = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [username, setUsername] = useState("");
+    const [nickname, setNickname] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(signUpUser({ email, password, username }));
+        dispatch(signUpUser({ email, password, nickname }));
     };
 
     return (
@@ -69,8 +69,8 @@ const SignUp = () => {
                         type="text"
                         className={styles.input}
                         placeholder="Мария Ивановна"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        value={nickname}
+                        onChange={(e) => setNickname(e.target.value)}
                         required
                     />
                 </div>

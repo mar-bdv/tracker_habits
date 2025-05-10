@@ -15,7 +15,9 @@ import { fetchCategories } from "../../store/categoriesSlice";
 export const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
+    const [filter, setFilter] = useState("all");
     const dispatch = useDispatch();
+    const dateStr = getLocalDateString(selectedDate); // "YYYY-MM-DD"
 
     const handleDayClick = (day) => {
         if (!day) return; // Игнорируем пустые ячейки
@@ -78,7 +80,6 @@ export const Calendar = () => {
     const calendarDays = [...emptyCells, ...daysArray];
 
 
-
     // Получаем userId из Redux (или если оно в localStorage, то используем его)
     const userId = useSelector((state) => state.auth.user?.id);
     const habits = useSelector((state) => state.habits.habits);
@@ -95,18 +96,30 @@ export const Calendar = () => {
     }, [userId, habits.length, dispatch]);
 
 
-    const filteredHabits = habits.filter((habit) => {
-        const selected = new Date(selectedDate).setHours(0, 0, 0, 0);
-        const start = new Date(habit.created_at).setHours(0, 0, 0, 0);
-        const end = habit.deadline ? new Date(habit.deadline).setHours(0, 0, 0, 0) : null;
-    
-        if (!end) {
-            return selected >= start;
-        } else {
-            return selected >= start && selected <= end;
-        }
+   // 1) Сначала отфильтровать по статусу (active/completed/withDate)
+    const filteredByStatus = habits.filter(habit => {
+        const done = !!habit.completedDates?.[dateStr];
+        if (filter === "active")    return !done;
+        if (filter === "completed") return done;
+        if (filter === "withDate")  return habit.deadline && !done;
+        return true;
+    });
+
+    // 2) Затем из этого массива взять только те, 
+    //    чей диапазон (created_at…deadline) охватывает selectedDate
+    const filteredByCalendar = filteredByStatus.filter(habit => {
+        const sel = new Date(selectedDate).setHours(0,0,0,0);
+        const start = new Date(habit.created_at).setHours(0,0,0,0);
+        const end = habit.deadline 
+            ? new Date(habit.deadline).setHours(0,0,0,0) 
+            : Infinity;
+        return sel >= start && sel <= end;
     });
     
+    const activeCount    = habits.filter(h => !h.completedDates?.[dateStr]).length;
+    const completedCount = habits.filter(h =>  h.completedDates?.[dateStr]).length;
+    const withDateCount  = habits.filter(h => h.deadline && !h.completedDates?.[dateStr]).length;
+            
     return (
         <div className={styles.container}>
             <div className={styles.heading_block}>
@@ -177,16 +190,19 @@ export const Calendar = () => {
                     <p className={styles.your_habits}>Твои привычки на сегодня (10)</p>
                         
                         <div className={styles.block_filters}>
-                            <Filters />
+                            <Filters
+                                activeCount={activeCount}
+                                completedCount={completedCount}
+                                withDateCount={withDateCount}
+                                setFilter={setFilter}
+                                currentFilter={filter}
+                            />
 
                         </div>
                         <div className={styles.habits}>
 
-                            {/* {habits.map((habit) => (
-                                <Habit key={habit.id} habit={habit} style={{ margin: "10px 0px", width: "95%" }} />
-                            ))} */}
-                            {filteredHabits.length > 0 ? (
-                                filteredHabits.map((habit) => (
+                            {filteredByCalendar.length > 0 ? (
+                                filteredByCalendar.map((habit) => (
                                     <Habit 
                                         key={habit.id} 
                                         habit={habit} 

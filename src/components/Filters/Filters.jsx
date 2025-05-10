@@ -1,15 +1,52 @@
 import styles from "./Filters.module.scss";
 
 
-const Filters = () => {
+// const Filters = ({ activeCount, completedCount, withDateCount, setFilter, currentFilter }) => {
+//     const getClass = (type) => currentFilter === type ? styles.active : "";
+
+//     return (
+//         <div className={styles.filters}>
+//             <p className={getClass("active")} onClick={() => setFilter("active")}>Активные ({activeCount})</p>
+//             <p className={getClass("completed")} onClick={() => setFilter("completed")}>Завершенные ({completedCount})</p>
+//             <p className={getClass("withDate")} onClick={() => setFilter("withDate")}>С датой ({withDateCount})</p>
+//         </div>
+//     );
+// };
+
+// export default Filters;
+
+const Filters = ({ 
+    activeCount, 
+    completedCount, 
+    withDateCount, 
+    setFilter, 
+    currentFilter 
+}) => {
+    const getClass = (type) =>
+        currentFilter === type ? styles.active : "";
 
     return (
         <div className={styles.filters}>
-            <p>Активные (1)</p>
-            <p>Завершенные (5)</p>
-            <p>С датой (2)</p>
+        <p
+            className={getClass("active")}
+            onClick={() => setFilter("active")}
+        >
+            Активные ({activeCount})
+        </p>
+        <p
+            className={getClass("completed")}
+            onClick={() => setFilter("completed")}
+        >
+            Завершенные ({completedCount})
+        </p>
+        <p
+            className={getClass("withDate")}
+            onClick={() => setFilter("withDate")}
+        >
+            С датой ({withDateCount})
+        </p>
         </div>
-    )
-}
+    );
+};
 
 export default Filters;

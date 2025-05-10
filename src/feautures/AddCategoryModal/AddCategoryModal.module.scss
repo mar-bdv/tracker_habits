@@ -1,0 +1,107 @@
+@import '../../variables';
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+
+.modal {
+    background-color: $background;
+    border-radius: 30px;
+    width: 504px;
+    min-height: 254px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; // важно для скруглений
+}
+
+.header {
+    background-color: $main; // или конкретный цвет, например: #FFA500
+    padding: 20px 20px 5px 20px;    
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 0 10px;
+    color: $text;
+}
+
+.input {
+    max-width: 442px;
+    width: 100%;
+
+    background-color: $container;
+    border-radius: 10px;
+    font-size: 14px;
+    border: none;
+    font-family: "Lato", sans-serif;
+    padding: 5px 10px;
+    height: 40px;
+    margin-top: 0px;
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 20px;
+}
+
+.cancelBtn,
+.addBtn {
+    font-size: 15px;
+    height: 36px;
+    width: 133px;
+    border: none;
+    cursor: pointer;
+}
+
+.cancelBtn {
+    background-color: transparent;
+}
+
+.addBtn {
+    background-color: $main;
+    border-radius: 7px;
+}
+
+.title_input {
+    max-width: 460px;
+    width: 100%;
+    font-size: 16px;
+}
+
+.input_container {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+}
+
+.error {
+    color: $warning;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-right: auto;
+    margin-left: 25px;
+}
