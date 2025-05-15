@@ -1,3 +1,36 @@
-.mood_img {
-    margin: 20px;
+
+.mood_icon {
+    width: 68px;
+    height: 68px;
+    cursor: pointer;
+    color: gray; // вместо fill
+
+    &.selected {
+        color: #ffc400;
+    }
+}
+.mood_wrapper {
+    display: inline-flex;
+    padding: 2px;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+    cursor: pointer;
+
+    &:hover {
+        background: #f2ae6671; // чуть прозрачный при наведении
+    }
+    }
+
+    .selected {
+        background: #F2AE66;
+    }
+
+    .mood_icon {
+        width: 40px;
+        height: 40px;
+}
+
+.moods {
+    display: flex;;
+    gap: 20px;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import HowManyPercentDone from "../../components/HowManyPercentDone/HowManyPercentDone";
 import styles from "./Calendar.module.scss";
 import leftArrow from "../../images/left_arrow_month.png"
@@ -10,7 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchHabits } from "../../store/habitsSlice";
 import { getLocalDateString } from "../../utils/date";
 import { fetchCategories } from "../../store/categoriesSlice";
-
+import { moodIcons } from '../../components/Moods/Moods'
+import { fetchMoodsByMonth } from "../../store/moodsSlice";
 
 export const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -18,6 +19,7 @@ export const Calendar = () => {
     const [filter, setFilter] = useState("all");
     const dispatch = useDispatch();
     const dateStr = getLocalDateString(selectedDate); // "YYYY-MM-DD"
+
 
     const handleDayClick = (day) => {
         if (!day) return; // Игнорируем пустые ячейки
@@ -119,7 +121,53 @@ export const Calendar = () => {
     const activeCount    = habits.filter(h => !h.completedDates?.[dateStr]).length;
     const completedCount = habits.filter(h =>  h.completedDates?.[dateStr]).length;
     const withDateCount  = habits.filter(h => h.deadline && !h.completedDates?.[dateStr]).length;
-            
+
+    const moodsByDate = useSelector((state) => state.moods.moodsByDate);
+
+
+    useEffect(() => {
+        if (userId) {
+            dispatch(fetchMoodsByMonth({ userId, year: currentYear, month: currentMonth }));
+        }
+    }, [userId, currentYear, currentMonth, dispatch]);
+    
+
+    console.log("moodsByDate", moodsByDate);
+
+    const habitCountsByDate = useMemo(() => {
+        const counts = {};
+        if (!habits || habits.length === 0) return counts;
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const date = new Date(currentYear, currentMonth, day);
+            const dateStr = getLocalDateString(date);
+
+            const count = habits.filter(habit => {
+                const createdAt = new Date(habit.created_at).setHours(0,0,0,0);
+                const deadline = habit.deadline ? new Date(habit.deadline).setHours(0,0,0,0) : Infinity;
+                const current = date.setHours(0,0,0,0);
+
+                return current >= createdAt && current <= deadline;
+            }).length;
+
+            counts[dateStr] = count;
+        }
+
+        return counts;
+    }, [habits, currentMonth, currentYear, daysInMonth]);
+
+    const getHabitsCountForDate = (date) => {
+        const dateStr = getLocalDateString(date);
+        return habits.filter(habit => {
+            const dayTime = new Date(date).setHours(0, 0, 0, 0);
+            const start = new Date(habit.created_at).setHours(0, 0, 0, 0);
+            const end = habit.deadline ? new Date(habit.deadline).setHours(0, 0, 0, 0) : Infinity;
+            return dayTime >= start && dayTime <= end;
+        }).length;
+    };
+
+
+
     return (
         <div className={styles.container}>
             <div className={styles.heading_block}>
@@ -163,13 +211,43 @@ export const Calendar = () => {
                         {/* Дни месяца */}
                         <div className={styles.days}>
                             {calendarDays.map((day, index) => (
-                                <div 
-                                key={index} 
-                                className={`${styles.day} ${selectedDate?.getDate() === day ? styles.selected : ""}`} 
-                                onClick={() => handleDayClick(day)}
-                                >
-                                    {day || ""}
-                                </div>
+                                <>
+                                    <div 
+                                    key={index} 
+                                    className={`${styles.day} ${selectedDate?.getDate() === day ? styles.selected : ""}`} 
+                                    onClick={() => handleDayClick(day)}
+                                    >
+                                        <p className={styles.one_day}>{day || ""}</p>
+                                        <p className={styles.one_mood}>  
+                                            {day && (() => {
+                                                const dateKey = getLocalDateString(new Date(currentYear, currentMonth, day));
+                                                const moodValue = moodsByDate?.[dateKey]; // mood от 1 до 5
+                                                const MoodIcon = moodValue ? moodIcons[moodValue - 1] : null;
+
+                                                return (
+                                                <>
+                                                    {/* Иконка настроения, если есть */}
+                                                    {MoodIcon && (
+                                                    <div className={styles.calendar_mood_icon}>
+                                                        <MoodIcon width={24} height={24} />
+                                                    </div>
+                                                    )}
+
+                                                    {/* Количество привычек под каждой датой, если есть */}
+                                                    {habitCountsByDate[dateKey] > 0 && (
+                                                    <div className={styles.habit_count}>
+                                                        {habitCountsByDate[dateKey]}
+                                                    </div>
+                                                    )}
+                                                </>
+                                                );
+                                            })()}
+                                        </p>
+
+                                    </div>
+                                    
+                                
+                                </>
                             ))}
                         </div>
 

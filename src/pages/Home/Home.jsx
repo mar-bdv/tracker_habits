@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addHabit, fetchHabitCompletions, fetchHabits } from "../../store/habitsSlice";
 import { getLocalDateString } from "../../utils/date";
 import { fetchCategories } from "../../store/categoriesSlice";
+import { fetchTodayMood } from "../../store/moodsSlice";
 
 
 const Home = () => {
@@ -31,6 +32,7 @@ const Home = () => {
         if (userId) {
             dispatch(fetchHabits(userId));
             dispatch(fetchCategories(userId));
+            dispatch(fetchTodayMood(userId));
             // dispatch(fetchHabitCompletions({ userId, date: dateStr }));
         }
     }, [userId, selectedDate, dispatch]);
@@ -87,10 +89,6 @@ const Home = () => {
                     <div className={styles.habits_list}>
                         {/* ПРИВЫЧКИ */}
                         <div className={styles.habits}>
-
-                            {/* {habits.map((habit) => (
-                                <Habit key={habit.id} habit={habit} selectedDate={getLocalDateString(selectedDate)}/>
-                            ))} */}
 
                             {filteredHabits.map(habit => (
                                 <Habit
