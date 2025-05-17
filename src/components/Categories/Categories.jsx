@@ -7,8 +7,6 @@ import deleteImg from "../../images/delete_btn.png"
 import { deleteCategory, fetchCategories, hideCategoryForUser } from "../../store/categoriesSlice";
 
 
-
-
 const Categories = ({ onFilterChange }) => {
   const dispatch = useDispatch();
   const userId = useSelector((s) => s.auth.user.id);

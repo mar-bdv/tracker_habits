@@ -6,38 +6,49 @@ import { ReactComponent as FourMood } from '../../images/4_mood.svg';
 import { ReactComponent as FiveMood } from '../../images/5_mood.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './Moods.module.scss';
-import { setTodayMood } from '../../store/moodsSlice'
+import { setMoodForDate, setTodayMood } from '../../store/moodsSlice'
+import { getLocalDateString } from '../../utils/date';
 
 export const moodIcons = [OneMood, TwoMood, ThreeMood, FourMood, FiveMood];
 
-const Moods = ({ style }) => {
+const Moods = ({ style, selectedMood, selectedDate }) => {
     const dispatch = useDispatch();
     const userId = useSelector(state => state.auth.user?.id);
+
+
+    const isTodayDate = (date) => {
+        const today = new Date();
+        if (!date) return false; 
+        return (
+            date.getDate() === today.getDate() &&
+            date.getMonth() === today.getMonth() &&
+            date.getFullYear() === today.getFullYear()
+        );
+    };
+
+
     const todayMood = useSelector(state => state.moods.todayMood?.mood); // от 1 до 5
+    const selectedMoodValue = isTodayDate(selectedDate) ? todayMood : selectedMood;
 
     const handleClick = (index) => {
         if (!userId) return;
         const moodValue = index + 1;
-        dispatch(setTodayMood({ userId, mood: moodValue }));
-        console.log("mood one")
+        const dateStr = getLocalDateString(selectedDate);
+
+        if (isTodayDate(selectedDate)) {
+            dispatch(setTodayMood({ userId, mood: moodValue }));
+        } else {
+            dispatch(setMoodForDate({ userId, date: dateStr, mood: moodValue }));
+        }
     };
+
 
     return (
         <div className={styles.moods}>
-            {/* {moodImages.map((img, i) => (
-                <img
-                    key={i}
-                    className={`${styles.mood_img} ${todayMood === i + 1 ? styles.selected : ''}`}
-                    style={style}
-                    src={img}
-                    alt={`mood-${i + 1}`}
-                    onClick={() => handleClick(i)}
-                />
-            ))} */}
             {moodIcons.map((Icon, i) => (
                 <div
                     key={i}
-                    className={`${styles.mood_wrapper} ${todayMood === i + 1 ? styles.selected : ''}`}
+                    className={`${styles.mood_wrapper} ${selectedMoodValue === i + 1 ? styles.selected : ''}`}
                     style={style}
                     onClick={() => handleClick(i)}
                 >

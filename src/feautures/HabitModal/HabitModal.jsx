@@ -4,9 +4,8 @@ import { updateHabit, addHabit } from "../../store/habitsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../store/categoriesSlice";
 
-const HabitModal = ({ habit, isVisible, onClose, onSave, title, setTitle, notes, setNotes, category, categories, setCategory, deadline, setDeadline }) => {
+const HabitModal = ({ isVisible, onClose, onSave, title, setTitle, notes, setNotes, category, categories, setCategory, deadline, setDeadline }) => {
     const modalRef = useRef(null);
-    const dispatch = useDispatch();
 
     // Закрытие модалки при клике вне её
     const handleModalClickOutside = useCallback((event) => {
@@ -46,12 +45,6 @@ const HabitModal = ({ habit, isVisible, onClose, onSave, title, setTitle, notes,
                     </label>
                     <label className={styles.label_text}>
                         Категория:
-                        {/* <select className={styles.modal_options} value={category} onChange={(e) => setCategory(e.target.value)}>
-                            <option value="">Выберите категорию</option>
-                            <option value="Здоровье">Здоровье</option>
-                            <option value="Обучение">Обучение</option>
-                            <option value="Развитие">Развитие</option>
-                        </select> */}
 
                         <select
                             id="category"

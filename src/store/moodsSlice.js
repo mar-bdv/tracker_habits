@@ -55,6 +55,21 @@ export const fetchMoodsByMonth = createAsyncThunk(
     }
 );
 
+export const setMoodForDate = createAsyncThunk(
+    'moods/setMoodForDate',
+    async ({ userId, date, mood }, thunkAPI) => {
+        await supabase
+        .from('moods')
+        .upsert([{ user_id: userId, date, mood }]);
+
+        thunkAPI.dispatch(fetchMoodsByMonth({
+        userId,
+        year: new Date(date).getFullYear(),
+        month: new Date(date).getMonth(),
+        }));
+    }
+);
+
 const moodsSlice = createSlice({
     name: 'moods',
     initialState: {

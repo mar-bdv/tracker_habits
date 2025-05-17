@@ -13,40 +13,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "./store/authSlice";
 import PrivateRoute from "./PrivateRoute";
 
-// function App() {
-
-//     const dispatch = useDispatch();
-//     const { user, loading } = useSelector(state => state.auth);
-
-//     useEffect(() => {
-//         dispatch(getCurrentUser());
-//     }, [dispatch]);
-
-//     return (
-//         <Router>
-//             <Routes>
-//                 <Route path="/welcomePage" element={<WelcomePage />} />
-//                 <Route path="/signup" element={<SignUp />} />
-//                 <Route path="/signin" element={<SignIn />} />
-//                 <Route path="/" element={<Layout />}>
-//                     <Route index element={<PrivateRoute><Home /></PrivateRoute>} />
-//                     <Route path="home" element={<PrivateRoute><Home /></PrivateRoute>} />
-//                     <Route path="auth" element={<PrivateRoute><Auth /></PrivateRoute>} />
-//                     <Route path="habits" element={<PrivateRoute><Habits /></PrivateRoute>} />
-//                     <Route path="calendar" element={<PrivateRoute><Calendar /></PrivateRoute>} />
-//                     <Route path="settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
-//                 </Route>
-//             </Routes>
-//         </Router>
-//     );
-// }
-
-// export default App;
-
-// import { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { getCurrentUser } from "./store/authSlice";
-// import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 function App() {
     const dispatch = useDispatch();

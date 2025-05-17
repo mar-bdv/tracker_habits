@@ -12,6 +12,7 @@ import { addHabit, fetchHabits } from "../../store/habitsSlice";
 import { getUserHabits } from "../../habitsThunks";
 import { fetchCategories } from "../../store/categoriesSlice";
 import AddCategoryModal from "../../feautures/AddCategoryModal/AddCategoryModal";
+import { getLocalDateString } from "../../utils/date";
 
 
 
@@ -25,6 +26,12 @@ const Habits = () => {
   const [filter, setFilter] = useState("all"); 
   const [filterCats, setFilterCats] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const dateStr = getLocalDateString(selectedDate); // формат "2025-05-08"
+
+  const moodsByDate = useSelector((state) => state.moods.moodsByDate);
+  const selectedMood = moodsByDate?.[dateStr] || null;
 
   useEffect(() => {
     if (userId) {
@@ -120,7 +127,10 @@ const Habits = () => {
               <div className={styles.moods_container}>
                 <HowManyPercentDone />
                 <p>Какое у вас сегодня настроение?</p>
-                <Moods />
+                <Moods 
+                  selectedMood={selectedMood} 
+                  selectedDate={selectedDate} 
+                />
               </div>
 
             </div>

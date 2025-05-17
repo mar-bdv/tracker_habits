@@ -18,15 +18,20 @@ import { fetchTodayMood } from "../../store/moodsSlice";
 const Home = () => {
     const dispatch = useDispatch();
 
+    const [filter, setFilter] = useState("all"); // all | active | completed | withDate
+    const [selectedDate, setSelectedDate] = useState(new Date());
+
     // Получаем userId из Redux (или если оно в localStorage, то используем его)
     const userId = useSelector((state) => state.auth.user?.id);
+    const user = useSelector((state) => state.auth.user);
     const habits = useSelector((state) => state.habits.habits);
     const status = useSelector((state) => state.habits.status);
     const error = useSelector((state) => state.habits.error);
-    const [filter, setFilter] = useState("all"); // all | active | completed | withDate
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    // const completions = useSelector((state) => state.habits.completions);
 
+    const dateStr = getLocalDateString(selectedDate); // формат "2025-05-08"
+
+    const moodsByDate = useSelector((state) => state.moods.moodsByDate);
+    const selectedMood = moodsByDate?.[dateStr] || null;
 
     useEffect(() => {
         if (userId) {
@@ -37,32 +42,33 @@ const Home = () => {
         }
     }, [userId, selectedDate, dispatch]);
 
-    const dateStr = getLocalDateString(selectedDate); // формат "2025-05-08"
-
-
-    const filteredHabits = habits.filter(habit => {
-        const done = !!habit.completedDates?.[dateStr];
-        switch (filter) {
-            case "active":    return !done;
-            case "completed": return done;
-            case "withDate":  return habit.deadline && !done;
-            case "byDate":    return habit.deadline?.slice(0,10) === dateStr;
-            default:          return true;
-        }
-    });
-
-
-
-    const user = useSelector((state) => state.auth.user);
 
     useEffect(() => {
         dispatch(fetchHabits(userId))
         dispatch(fetchCategories(userId));
     }, [userId, habits.length, dispatch]);
 
-    const activeCount    = habits.filter(h => !h.completedDates?.[dateStr]).length;
+
+    const filteredHabits = habits.filter(habit => {
+        const done = !!habit.completedDates?.[dateStr];
+        switch (filter) {
+            case "active":    
+                return !done;
+            case "completed": 
+                return done;
+            case "withDate":  
+                return habit.deadline && !done;
+            case "byDate":    
+                return habit.deadline?.slice(0,10) === dateStr;
+            default:          
+                return true;
+        }
+    });
+
+
+    const activeCount = habits.filter(h => !h.completedDates?.[dateStr]).length;
     const completedCount = habits.filter(h =>  h.completedDates?.[dateStr]).length;
-    const withDateCount  = habits.filter(h => h.deadline && !h.completedDates?.[dateStr]).length;
+    const withDateCount = habits.filter(h => h.deadline && !h.completedDates?.[dateStr]).length;
 
     return (
         <div className={styles.home_container}>
@@ -113,7 +119,11 @@ const Home = () => {
 
                     <div>
                         <p>Какое у вас сегодня настроение?</p>
-                        <Moods />
+                        <Moods 
+                            selectedMood={selectedMood} 
+                            selectedDate={selectedDate} 
+
+                        />
                     </div>
 
 

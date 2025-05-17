@@ -14,35 +14,61 @@ import { moodIcons } from '../../components/Moods/Moods'
 import { fetchMoodsByMonth } from "../../store/moodsSlice";
 
 export const Calendar = () => {
+    const dispatch = useDispatch();
+
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [filter, setFilter] = useState("all");
-    const dispatch = useDispatch();
+
+    const moodsByDate = useSelector((state) => state.moods.moodsByDate);
+    const userId = useSelector((state) => state.auth.user?.id);
+    const habits = useSelector((state) => state.habits.habits);
+    const status = useSelector((state) => state.habits.status);
+    const error = useSelector((state) => state.habits.error);
+    const authStatus = useSelector((state) => state.auth.status);
+
     const dateStr = getLocalDateString(selectedDate); // "YYYY-MM-DD"
+    const selectedMood = moodsByDate?.[dateStr] || null;
+
+
+    const currentMonth = currentDate.getMonth(); // Месяц (0-11)
+    const currentYear = currentDate.getFullYear(); // Год
 
 
     const handleDayClick = (day) => {
-        if (!day) return; // Игнорируем пустые ячейки
+        if (!day) return;
         setSelectedDate(new Date(currentYear, currentMonth, day));
     };
 
     useEffect(() => {
         setSelectedDate(new Date());
     }, []);
+
     
-    // Функция для получения количества дней в месяце
+    useEffect(() => {
+        if (userId && habits.length === 0) {
+            dispatch(fetchCategories(userId));
+            dispatch(fetchHabits(userId));
+        }
+    }, [userId, habits.length, dispatch]);
+
+    useEffect(() => {
+        if (userId) {
+            dispatch(fetchMoodsByMonth({ userId, year: currentYear, month: currentMonth }));
+        }
+    }, [userId, currentYear, currentMonth, dispatch]);
+
+    
     const getDaysInMonth = (month, year) => {
         return new Date(year, month + 1, 0).getDate();
     };
 
-    // Функция для получения дня недели первого числа месяца (0 - понедельник, 1 - вторник, ...)
     const getFirstDayOfMonth = (month, year) => {
         const firstDay = new Date(year, month, 1).getDay();
-        // Смещаем день недели, чтобы понедельник был первым днем (0)
+
         return firstDay === 0 ? 6 : firstDay - 1;
     };
 
-    // Функция для получения названия месяца
     const getMonthName = (month) => {
         const months = [
         "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
@@ -63,42 +89,21 @@ export const Calendar = () => {
 
         setCurrentDate(newDate);
     };
-
-    // Данные для текущего месяца
-    const currentMonth = currentDate.getMonth(); // Месяц (0-11)
-    const currentYear = currentDate.getFullYear(); // Год
-
-    // Получаем количество дней в текущем месяце и первый день месяца
+    
     const daysInMonth = getDaysInMonth(currentMonth, currentYear);
     const firstDayOfMonth = getFirstDayOfMonth(currentMonth, currentYear);
 
-    // Создаем массив для календаря
     const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
-    // Заполняем пустыми ячейками перед первым днем месяца
     const emptyCells = Array.from({ length: firstDayOfMonth }, (_, i) => null);
 
-    // Объединяем пустые ячейки и дни месяца
     const calendarDays = [...emptyCells, ...daysArray];
 
 
-    // Получаем userId из Redux (или если оно в localStorage, то используем его)
-    const userId = useSelector((state) => state.auth.user?.id);
-    const habits = useSelector((state) => state.habits.habits);
-    const status = useSelector((state) => state.habits.status);
-    const error = useSelector((state) => state.habits.error);
-    const authStatus = useSelector((state) => state.auth.status);
+    const activeCount    = habits.filter(h => !h.completedDates?.[dateStr]).length;
+    const completedCount = habits.filter(h =>  h.completedDates?.[dateStr]).length;
+    const withDateCount  = habits.filter(h => h.deadline && !h.completedDates?.[dateStr]).length;
 
-    useEffect(() => {
-
-        if (userId && habits.length === 0) {
-            dispatch(fetchCategories(userId));
-            dispatch(fetchHabits(userId));
-        }
-    }, [userId, habits.length, dispatch]);
-
-
-   // 1) Сначала отфильтровать по статусу (active/completed/withDate)
     const filteredByStatus = habits.filter(habit => {
         const done = !!habit.completedDates?.[dateStr];
         if (filter === "active")    return !done;
@@ -107,8 +112,6 @@ export const Calendar = () => {
         return true;
     });
 
-    // 2) Затем из этого массива взять только те, 
-    //    чей диапазон (created_at…deadline) охватывает selectedDate
     const filteredByCalendar = filteredByStatus.filter(habit => {
         const sel = new Date(selectedDate).setHours(0,0,0,0);
         const start = new Date(habit.created_at).setHours(0,0,0,0);
@@ -117,22 +120,6 @@ export const Calendar = () => {
             : Infinity;
         return sel >= start && sel <= end;
     });
-    
-    const activeCount    = habits.filter(h => !h.completedDates?.[dateStr]).length;
-    const completedCount = habits.filter(h =>  h.completedDates?.[dateStr]).length;
-    const withDateCount  = habits.filter(h => h.deadline && !h.completedDates?.[dateStr]).length;
-
-    const moodsByDate = useSelector((state) => state.moods.moodsByDate);
-
-
-    useEffect(() => {
-        if (userId) {
-            dispatch(fetchMoodsByMonth({ userId, year: currentYear, month: currentMonth }));
-        }
-    }, [userId, currentYear, currentMonth, dispatch]);
-    
-
-    console.log("moodsByDate", moodsByDate);
 
     const habitCountsByDate = useMemo(() => {
         const counts = {};
@@ -156,17 +143,6 @@ export const Calendar = () => {
         return counts;
     }, [habits, currentMonth, currentYear, daysInMonth]);
 
-    const getHabitsCountForDate = (date) => {
-        const dateStr = getLocalDateString(date);
-        return habits.filter(habit => {
-            const dayTime = new Date(date).setHours(0, 0, 0, 0);
-            const start = new Date(habit.created_at).setHours(0, 0, 0, 0);
-            const end = habit.deadline ? new Date(habit.deadline).setHours(0, 0, 0, 0) : Infinity;
-            return dayTime >= start && dayTime <= end;
-        }).length;
-    };
-
-
 
     return (
         <div className={styles.container}>
@@ -177,23 +153,20 @@ export const Calendar = () => {
             <div className={styles.container_calendar}>
                 <div className={styles.calendar_block}>
                     <div className={styles.navigation}>
-                        {/* Стрелка назад */}
                         <button
                             className={styles.arrow}
                             onClick={() => changeMonth(-1)}
-                            disabled={currentDate.getMonth() <= new Date().getMonth() - 3} // Ограничиваем назад на 3 месяца
+                            disabled={currentDate.getMonth() <= new Date().getMonth() - 3}
                         >
                             <img src={leftArrow} alt="стрелка влево" />
                         </button>
 
-                        {/* Название месяца */}
                         <div className={styles.monthName}>{getMonthName(currentMonth)} {currentYear}</div>
 
-                        {/* Стрелка вперед */}
                         <button
                             className={styles.arrow}
                             onClick={() => changeMonth(1)}
-                            disabled={currentDate.getMonth() >= new Date().getMonth() + 3} // Ограничиваем вперед на 3 месяца
+                            disabled={currentDate.getMonth() >= new Date().getMonth() + 3}
                         >
                             <img src={rightArrow} alt="стрелка вправо" />
 
@@ -211,14 +184,14 @@ export const Calendar = () => {
                         {/* Дни месяца */}
                         <div className={styles.days}>
                             {calendarDays.map((day, index) => (
-                                <>
+
                                     <div 
                                     key={index} 
                                     className={`${styles.day} ${selectedDate?.getDate() === day ? styles.selected : ""}`} 
                                     onClick={() => handleDayClick(day)}
                                     >
                                         <p className={styles.one_day}>{day || ""}</p>
-                                        <p className={styles.one_mood}>  
+                                        <div className={styles.one_mood}>  
                                             {day && (() => {
                                                 const dateKey = getLocalDateString(new Date(currentYear, currentMonth, day));
                                                 const moodValue = moodsByDate?.[dateKey]; // mood от 1 до 5
@@ -226,14 +199,12 @@ export const Calendar = () => {
 
                                                 return (
                                                 <>
-                                                    {/* Иконка настроения, если есть */}
                                                     {MoodIcon && (
                                                     <div className={styles.calendar_mood_icon}>
                                                         <MoodIcon width={24} height={24} />
                                                     </div>
                                                     )}
 
-                                                    {/* Количество привычек под каждой датой, если есть */}
                                                     {habitCountsByDate[dateKey] > 0 && (
                                                     <div className={styles.habit_count}>
                                                         {habitCountsByDate[dateKey]}
@@ -242,12 +213,12 @@ export const Calendar = () => {
                                                 </>
                                                 );
                                             })()}
-                                        </p>
+                                        </div>
 
                                     </div>
                                     
                                 
-                                </>
+
                             ))}
                         </div>
 
@@ -296,7 +267,13 @@ export const Calendar = () => {
 
                         <div className={styles.moods_block}>
                             <p className={styles.mood_text}>Какое у вас сегодня настроение?</p>
-                            <Moods style={{ width: "35px", margin: "10px" }}/>
+                            <Moods 
+                                style={{ width: "35px", margin: "10px" }}  
+                                selectedMood={selectedMood} 
+                                selectedDate={selectedDate} 
+                                userId={userId}
+                            />
+
                         </div>
                     </div>
                 </div>
