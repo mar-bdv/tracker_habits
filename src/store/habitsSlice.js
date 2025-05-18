@@ -63,34 +63,6 @@ export const deleteHabit = createAsyncThunk(
 );
 
 
-// export const fetchHabits = createAsyncThunk(
-//   "habits/fetchHabits",
-//   async (userId, thunkAPI) => {
-//     const { data, error } = await supabase
-//       .from("habits")
-//       .select(`
-//         *,
-//         categories (
-//           name,
-//           is_system
-//         )
-//       `)
-//       .eq("user_id", userId);
-
-//     if (error) {
-//       return thunkAPI.rejectWithValue(error.message);
-//     }
-
-//     // Преобразуем, чтобы категория была в виде строки
-//     const habitsWithCategory = data.map((habit) => ({
-//       ...habit,
-//       category: habit.categories?.name || "", // визуально отображаем имя категории
-//     }));
-
-//     return habitsWithCategory;
-//   }
-// );
-
 export const fetchHabits = createAsyncThunk(
   "habits/fetchHabits",
   async (userId, thunkAPI) => {

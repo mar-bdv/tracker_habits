@@ -1,0 +1,23 @@
+@import '../../variables';
+
+
+.filters {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: start;
+}
+
+.progressBar {
+    width: 400px;
+    height: 15px;
+    background-color: $border;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background-color: $main;
+    transition: width 0.3s ease-in-out;
+}
