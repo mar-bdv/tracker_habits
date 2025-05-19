@@ -13,6 +13,7 @@ import { getUserHabits } from "../../habitsThunks";
 import { fetchCategories } from "../../store/categoriesSlice";
 import AddCategoryModal from "../../feautures/AddCategoryModal/AddCategoryModal";
 import { getLocalDateString } from "../../utils/date";
+import SearchHabits from "../../components/SearchHabits/SearchHabits";
 
 
 
@@ -26,6 +27,7 @@ const Habits = () => {
   const [filter, setFilter] = useState("all"); 
   const [filterCats, setFilterCats] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const dateStr = getLocalDateString(selectedDate); // формат "2025-05-08"
@@ -49,6 +51,20 @@ const Habits = () => {
   const withDateCount  = habits.filter(h => h.deadline && !h.completedDates?.[new Date().toISOString().slice(0,10)]).length;
 
   // Фильтрация
+  // const today = new Date().toISOString().slice(0,10);
+  // const filteredByStatus = habits.filter(h => {
+  //   const done = !!h.completedDates?.[today];
+  //   if (filter === "active")    return !done;
+  //   if (filter === "completed") return done;
+  //   if (filter === "withDate")  return h.deadline && !done;
+  //   return true;
+  // });
+
+  // Фильтрация по категориям (если нужны оба сразу, можно комбинировать)
+  // const filteredHabits = filterCats.length === 0
+  //   ? filteredByStatus
+  //   : filteredByStatus.filter(h => filterCats.includes(h.category_id));
+
   const today = new Date().toISOString().slice(0,10);
   const filteredByStatus = habits.filter(h => {
     const done = !!h.completedDates?.[today];
@@ -58,10 +74,13 @@ const Habits = () => {
     return true;
   });
 
-  // Фильтрация по категориям (если нужны оба сразу, можно комбинировать)
-  const filteredHabits = filterCats.length === 0
+  const filteredByCats = filterCats.length === 0
     ? filteredByStatus
     : filteredByStatus.filter(h => filterCats.includes(h.category_id));
+
+  const filteredHabits = filteredByCats.filter(habit =>
+    habit.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div>
@@ -74,12 +93,8 @@ const Habits = () => {
               
               <div className={styles.left_block}>
                 <div>
-                  <input 
-                  type="text" 
-                  placeholder="Поиск привычек"
-                  className={styles.input}
-                />
-              </div>
+                  <SearchHabits searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                </div>
 
               <div className={styles.categories_block}>
                 <p>Категории</p>
@@ -104,8 +119,6 @@ const Habits = () => {
                   currentFilter={filter}
                 />
               </div>
-            
-
 
               <div className={styles.addhabit_container}>
                 <div className={styles.habits}>

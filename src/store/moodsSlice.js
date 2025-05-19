@@ -20,17 +20,45 @@ export const fetchTodayMood = createAsyncThunk(
 );
 
 // Отправка настроения
+// export const setTodayMood = createAsyncThunk(
+//     'moods/setTodayMood',
+//     async ({ userId, mood }) => {
+//         const today = getLocalDateString(new Date());
+
+//         // upsert — если есть, обновит; если нет — вставит
+//         const { data, error } = await supabase
+//         .from('moods')
+//         .upsert({ user_id: userId, mood, date: today }, { onConflict: ['user_id', 'date'] })
+//         .select()
+//         .single();
+
+//         if (error) throw error;
+//         return data;
+//     }
+// );
+
+
 export const setTodayMood = createAsyncThunk(
     'moods/setTodayMood',
     async ({ userId, mood }) => {
         const today = getLocalDateString(new Date());
 
-        // upsert — если есть, обновит; если нет — вставит
+        if (mood === null) {
+            // Удаление настроения
+            const { error } = await supabase
+                .from('moods')
+                .delete()
+                .eq('user_id', userId)
+                .eq('date', today);
+            if (error) throw error;
+            return null;
+        }
+
         const { data, error } = await supabase
-        .from('moods')
-        .upsert({ user_id: userId, mood, date: today }, { onConflict: ['user_id', 'date'] })
-        .select()
-        .single();
+            .from('moods')
+            .upsert({ user_id: userId, mood, date: today }, { onConflict: ['user_id', 'date'] })
+            .select()
+            .single();
 
         if (error) throw error;
         return data;
@@ -55,17 +83,40 @@ export const fetchMoodsByMonth = createAsyncThunk(
     }
 );
 
+// export const setMoodForDate = createAsyncThunk(
+//     'moods/setMoodForDate',
+//     async ({ userId, date, mood }, thunkAPI) => {
+//         await supabase
+//         .from('moods')
+//         .upsert([{ user_id: userId, date, mood }]);
+
+//         thunkAPI.dispatch(fetchMoodsByMonth({
+//         userId,
+//         year: new Date(date).getFullYear(),
+//         month: new Date(date).getMonth(),
+//         }));
+//     }
+// );
+
 export const setMoodForDate = createAsyncThunk(
     'moods/setMoodForDate',
     async ({ userId, date, mood }, thunkAPI) => {
-        await supabase
-        .from('moods')
-        .upsert([{ user_id: userId, date, mood }]);
+        if (mood === null) {
+            await supabase
+                .from('moods')
+                .delete()
+                .eq('user_id', userId)
+                .eq('date', date);
+        } else {
+            await supabase
+                .from('moods')
+                .upsert([{ user_id: userId, date, mood }]);
+        }
 
         thunkAPI.dispatch(fetchMoodsByMonth({
-        userId,
-        year: new Date(date).getFullYear(),
-        month: new Date(date).getMonth(),
+            userId,
+            year: new Date(date).getFullYear(),
+            month: new Date(date).getMonth(),
         }));
     }
 );

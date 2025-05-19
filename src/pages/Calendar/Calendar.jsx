@@ -143,6 +143,16 @@ export const Calendar = () => {
         return counts;
     }, [habits, currentMonth, currentYear, daysInMonth]);
 
+    const activeHabitsForDate = habits.filter(habit => {
+        const sel = new Date(selectedDate).setHours(0, 0, 0, 0);
+        const start = new Date(habit.created_at).setHours(0, 0, 0, 0);
+        const end = habit.deadline 
+            ? new Date(habit.deadline).setHours(0, 0, 0, 0)
+            : Infinity;
+
+        return sel >= start && sel <= end;
+    });
+
 
     return (
         <div className={styles.container}>
@@ -226,17 +236,19 @@ export const Calendar = () => {
                     </div>
 
                     <div>
-                    <HowManyPercentDone />
+                        <HowManyPercentDone />
                     </div>
 
                 </div>
 
                 <div className={styles.right_block}>
                     <div className={styles.date_block}>
-                    <p className={styles.right_date}>
-                        {selectedDate ? selectedDate.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }) : "Выберите дату"}
-                    </p>                        
-                    <p className={styles.your_habits}>Твои привычки на сегодня (10)</p>
+                        <p className={styles.right_date}>
+                            {selectedDate ? selectedDate.toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }) : "Выберите дату"}
+                        </p>                        
+                        <p className={styles.your_habits}>Твои привычки на сегодня 
+                            <span className={styles.habit_count_circle}>{activeHabitsForDate.length}</span>
+                        </p>
                         
                         <div className={styles.block_filters}>
                             <Filters

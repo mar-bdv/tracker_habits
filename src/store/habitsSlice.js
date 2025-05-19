@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../supabaseClient";
+import { updateUserStreak } from "./streakSlice";
+import { useDispatch } from "react-redux";
 
 
 export const addHabit = createAsyncThunk(
@@ -178,6 +180,8 @@ export const toggleHabit = createAsyncThunk(
 export const toggleHabitForDate = createAsyncThunk(
   'habits/toggleHabitForDate',
   async ({ userId, habitId, date }, thunkAPI) => {
+    const { dispatch } = thunkAPI;
+    
     const { data, error } = await supabase
       .from('habit_completions')
       .select('*')
@@ -196,6 +200,8 @@ export const toggleHabitForDate = createAsyncThunk(
 
       if (deleteError) return thunkAPI.rejectWithValue(deleteError.message);
 
+      await dispatch(updateUserStreak(userId));
+
       return { habitId, date, completed: false }; // Выполнение убирается
     } else {
       // Если записи нет, добавляем новую
@@ -204,6 +210,8 @@ export const toggleHabitForDate = createAsyncThunk(
         .insert([{ user_id: userId, habit_id: habitId, date }]);
 
       if (insertError) return thunkAPI.rejectWithValue(insertError.message);
+      
+      await thunkAPI.dispatch(updateUserStreak(userId));
 
       return { habitId, date, completed: true }; // Выполнение добавляется
     }
@@ -258,15 +266,12 @@ const habitsSlice = createSlice({
 
       // ADD
       .addCase(addHabit.fulfilled, (state, action) => {
-        // if (action.payload && action.payload.length > 0) {
-        //   state.habits.push(action.payload[0]); // ← добавляем сразу!
-        // }
+
         state.habits.push(action.payload);
 
       })
 
       .addCase(updateHabit.fulfilled, (state, action) => {
-        // const updatedHabit = action.payload?.[0];
         const updatedHabit = action.payload;
         if (!updatedHabit) return;
         const index = state.habits.findIndex((h) => h.id === updatedHabit.id);

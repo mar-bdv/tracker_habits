@@ -28,7 +28,6 @@ const AddHabitButton = () => {
 
     return (
         <div className={styles.button_container}>
-            <p>{habitName}</p>
             {isEditing ? (
                 <div className={styles.inputContainer}>
                     <input

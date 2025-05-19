@@ -30,15 +30,30 @@ const Moods = ({ style, selectedMood, selectedDate }) => {
     const todayMood = useSelector(state => state.moods.todayMood?.mood); // от 1 до 5
     const selectedMoodValue = isTodayDate(selectedDate) ? todayMood : selectedMood;
 
+    // const handleClick = (index) => {
+    //     if (!userId) return;
+    //     const moodValue = index + 1;
+    //     const dateStr = getLocalDateString(selectedDate);
+
+    //     if (isTodayDate(selectedDate)) {
+    //         dispatch(setTodayMood({ userId, mood: moodValue }));
+    //     } else {
+    //         dispatch(setMoodForDate({ userId, date: dateStr, mood: moodValue }));
+    //     }
+    // };
+
     const handleClick = (index) => {
         if (!userId) return;
+
         const moodValue = index + 1;
         const dateStr = getLocalDateString(selectedDate);
 
+        const isSameMoodSelected = selectedMoodValue === moodValue;
+
         if (isTodayDate(selectedDate)) {
-            dispatch(setTodayMood({ userId, mood: moodValue }));
+            dispatch(setTodayMood({ userId, mood: isSameMoodSelected ? null : moodValue }));
         } else {
-            dispatch(setMoodForDate({ userId, date: dateStr, mood: moodValue }));
+            dispatch(setMoodForDate({ userId, date: dateStr, mood: isSameMoodSelected ? null : moodValue }));
         }
     };
 
