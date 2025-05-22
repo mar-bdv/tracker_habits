@@ -1,87 +1,3 @@
-
-// import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-// import { supabase } from "../supabaseClient";
-
-// export const signUpUser = createAsyncThunk(
-//   'auth/signUpUser',
-//   async ({ email, password, nickname }, thunkAPI) => {
-//     const { data, error } = await supabase.auth.signUp({
-//       email,
-//       password,
-//       options: {
-//         data: { nickname },
-//       },
-//     });
-
-//     if (error) return thunkAPI.rejectWithValue(error.message);
-
-//     const { error: userError } = await supabase
-//       .from('users')
-//       .insert([{ id: data.user.id, email, nickname }]);
-
-//     if (userError) return thunkAPI.rejectWithValue(userError.message);
-
-//     return data.user;
-//   }
-// );
-
-
-// // Вход
-// export const signInUser = createAsyncThunk(
-//   "auth/signInUser",
-//   async ({ email, password }, thunkAPI) => {
-//     const { data, error } = await supabase.auth.signInWithPassword({
-//       email,
-//       password,
-//     });
-
-//     if (error) return thunkAPI.rejectWithValue(error.message);
-
-//     return data.user;
-//   }
-// );
-
-// // Выход
-// export const signOutUser = createAsyncThunk("auth/signOutUser", async () => {
-//   await supabase.auth.signOut();
-//   return null;
-// });
-
-// // Получение текущего пользователя
-// export const getCurrentUser = createAsyncThunk(
-//   "auth/getCurrentUser",
-//   async (_, thunkAPI) => {
-//     const { data, error } = await supabase.auth.getUser();
-//     if (error) return thunkAPI.rejectWithValue(error.message);
-//     return data.user;
-//   }
-// );
-
-// // Создание Slice
-// const authSlice = createSlice({
-//   name: "auth",
-//   initialState: { user: null, loading: false, error: null },
-//   reducers: {},
-//   extraReducers: (builder) => {
-//     builder
-//       .addCase(signUpUser.fulfilled, (state, action) => {
-//         state.user = action.payload;
-//       })
-//       .addCase(signInUser.fulfilled, (state, action) => {
-//         state.user = action.payload;
-//       })
-//       .addCase(getCurrentUser.fulfilled, (state, action) => {
-//         state.user = action.payload;
-//       })
-//       .addCase(signOutUser.fulfilled, (state) => {
-//         state.user = null;
-//       });
-//   },
-// });
-
-// export default authSlice.reducer;
-
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../supabaseClient";
 
@@ -142,22 +58,95 @@ export const signOutUser = createAsyncThunk("auth/signOutUser", async () => {
   return null;
 });
 
-// Получение текущего пользователя
+
+
 export const getCurrentUser = createAsyncThunk(
   "auth/getCurrentUser",
   async (_, thunkAPI) => {
-    const { data, error } = await supabase.auth.getUser();
-    if (error || !data.user) return thunkAPI.rejectWithValue(error?.message || 'No user');
+    const { data: authData, error: authError } = await supabase.auth.getUser();
+    if (authError || !authData.user) {
+      return thunkAPI.rejectWithValue(authError?.message || 'No user');
+    }
 
-    const user = data.user;
+    const userId = authData.user.id;
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', userId)
+      .single();
+
+    if (error) return thunkAPI.rejectWithValue(error.message);
 
     return {
-      id: user.id,
-      email: user.email,
-      nickname: user.user_metadata?.nickname || '',
+      id: data.id,
+      email: data.email,
+      nickname: data.nickname,
+      avatar_url: data.avatar_url,
     };
   }
 );
+
+
+export const updateAvatar = createAsyncThunk(
+  'auth/updateAvatar',
+  async ({ avatarUrl, userId }, { rejectWithValue }) => {
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ avatar_url: avatarUrl })
+        .eq('id', userId);
+
+      if (error) {
+        throw error;
+      }
+
+      return avatarUrl; // вернём для обновления в state
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
+export const deleteAvatar = createAsyncThunk(
+  'auth/deleteAvatar',
+  async (userId, { rejectWithValue }) => {
+    try {
+      const DEFAULT_AVATAR_URL = 'https://i.ibb.co/3y45FgtQ/img.png'; // или внешний URL
+
+      const { error } = await supabase
+        .from('users')
+        .update({ avatar_url: DEFAULT_AVATAR_URL })
+        .eq('id', userId);
+
+      if (error) throw error;
+
+      return DEFAULT_AVATAR_URL;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+
+export const updateNickname = createAsyncThunk(
+  'auth/updateNickname',
+  async ({ userId, newNickname }, { rejectWithValue }) => {
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ nickname: newNickname })
+        .eq('id', userId);
+
+      if (error) throw error;
+
+      return newNickname;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 
 // Слайс авторизации
 const authSlice = createSlice({
@@ -212,7 +201,22 @@ const authSlice = createSlice({
         state.loading = false;
         state.user = null;
         state.error = action.payload;
-      });
+      })
+
+      .addCase(updateAvatar.fulfilled, (state, action) => {
+        state.user.avatar_url = action.payload;
+      })
+      .addCase(deleteAvatar.fulfilled, (state, action) => {
+        if (state.user) {
+          state.user.avatar_url = action.payload;
+        }
+      })
+
+      .addCase(updateNickname.fulfilled, (state, action) => {
+        if (state.user) {
+          state.user.nickname = action.payload;
+        }
+      })
   },
 });
 

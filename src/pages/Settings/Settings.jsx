@@ -1,9 +1,28 @@
 import { useState } from "react";
 import styles from "./Settings.module.scss"
+import { useDispatch, useSelector } from "react-redux";
+import { updateAvatar, updateNickname } from "../../store/authSlice";
+import AddImage from "../../components/AddImage/AddImage";
 
 
 export const Settings = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [nicknameInput, setNicknameInput] = useState("");
+
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.auth.user);
+
+    const { error, loading } = useSelector(state => state.auth);
+
+    {loading && <p>Загрузка аватара...</p>}
+    {error && <p style={{ color: 'red' }}>Ошибка: {error}</p>}
+
+
+    const handleSaveNickname = () => {
+        if (user && nicknameInput.trim()) {
+            dispatch(updateNickname({ userId: user.id, newNickname: nicknameInput.trim() }));
+        }
+    };
 
     return (
         <div className={styles.container}>
@@ -13,18 +32,21 @@ export const Settings = () => {
 
             <div className={styles.settings_block}>
                 <div className={styles.top_block}>
-                    <div className={styles.img_block}>
-                        <img className={styles.img} src="https://i.pinimg.com/736x/b5/32/c4/b532c400c00d2099a6462729ccf88e26.jpg" alt="avatar"/>
-                        <br/>
-                        <button className={styles.img_btn}>Обновить изображение</button>
-                    </div>
+                    <AddImage />
 
                     <div className={styles.changeName_block}>
                         <p className={styles.changeName_p}>Сменить имя</p>
                         <div className={styles.input_block}>
-                            <input type="text" name="" id="" className={styles.input} />
-                            <button className={styles.save_btn}>Сохранить</button>
-
+                            <input
+                                type="text"
+                                className={styles.input}
+                                value={nicknameInput}
+                                onChange={(e) => setNicknameInput(e.target.value)}
+                                placeholder={"Ваше имя"}
+                            />
+                            <button className={styles.save_btn} onClick={handleSaveNickname}>
+                                Сохранить
+                            </button>
                         </div>
                     </div>
 
