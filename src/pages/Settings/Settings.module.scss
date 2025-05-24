@@ -1,11 +1,24 @@
 @import '../../variables';
 
+
+.container {
+    max-width: 1000px;
+    width: 100%;
+}
+
+.mini_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .header {
     color: $main;
     font-size: 45px;
     font-family: "Rubik Mono One", monospace;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
-
 
 .settings_block {
     background-color: $container;
@@ -38,12 +51,7 @@
     font-size: 16px;
 }
 
-.container {
-    margin-right: 500px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+
 
 .input {
     background-color: transparent;

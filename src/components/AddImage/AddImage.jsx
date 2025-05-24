@@ -2,7 +2,7 @@ import { useState } from 'react';
 import styles from './AddImage.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAvatar, updateAvatar } from '../../store/authSlice';
-
+import { AnimatePresence, motion } from 'framer-motion'
 
 const AddImage = () => {
     const dispatch = useDispatch();
@@ -51,38 +51,91 @@ const AddImage = () => {
                 alt="Аватар"
             />
 
+            <AnimatePresence mode="wait">
             {!isEditing ? (
-                <p
-                    className={styles.updateText}
-                    onClick={() => setIsEditing(true)}
+                <motion.p
+                key="text"
+                className={styles.updateText}
+                onClick={() => setIsEditing(true)}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
                 >
-                    Обновить изображение
-                </p>
+                Обновить изображение
+                </motion.p>
             ) : (
-                <div className={`${styles.inputGroup} ${isEditing ? styles['inputGroup--visible'] : ''}`}>
-                    <input
-                        type="text"
-                        value={avatarUrl}
-                        onChange={(e) => {
-                            setAvatarUrl(e.target.value);
-                        }}
-                        placeholder="https://example.com/avatar.png"
-                        className={styles.input}
-
-                    />
-                    <div className={styles.btns_container}>
-                        <button onClick={handleUpdateAvatar} className={styles.button}>
-                            Обновить
-                        </button>
-                        {user.avatar_url && (
-                            <button onClick={handleDeleteAvatar} className={styles.button}>
-                                Удалить
-                            </button>
-                        )}
-                    </div>
+                <motion.div
+                key="box"
+                className={styles.inputGroup}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }}
+                >
+                <input
+                    type="text"
+                    value={avatarUrl}
+                    onChange={(e) => setAvatarUrl(e.target.value)}
+                    placeholder="https://example.com/avatar.png"
+                    className={styles.input}
+                />
+                <div className={styles.btns_container}>
+                    <button onClick={handleUpdateAvatar} className={styles.button}>
+                    Обновить
+                    </button>
+                    {user.avatar_url && (
+                    <button onClick={handleDeleteAvatar} className={styles.button}>
+                        Удалить
+                    </button>
+                    )}
                 </div>
+                </motion.div>
             )}
+            </AnimatePresence>
+
         </div>
+
+        // <div className={styles.img_block}>
+        //     <img
+        //         className={styles.img}
+        //         src={user.avatar_url || '/default-avatar.png'}
+        //         alt="Аватар"
+        //     />
+
+        //     {!isEditing ? (
+        //         <p
+        //             className={styles.updateText}
+        //             onClick={() => setIsEditing(true)}
+        //         >
+        //             Обновить изображение
+        //         </p>
+        //     ) : (
+        //         <div className={`${styles.inputGroup} ${isEditing ? styles['inputGroup--visible'] : ''}`}>
+        //             <input
+        //                 type="text"
+        //                 value={avatarUrl}
+        //                 onChange={(e) => {
+        //                     setAvatarUrl(e.target.value);
+        //                 }}
+        //                 placeholder="https://example.com/avatar.png"
+        //                 className={styles.input}
+
+        //             />
+        //             <div className={styles.btns_container}>
+        //                 <button onClick={handleUpdateAvatar} className={styles.button}>
+        //                     Обновить
+        //                 </button>
+        //                 {user.avatar_url && (
+        //                     <button onClick={handleDeleteAvatar} className={styles.button}>
+        //                         Удалить
+        //                     </button>
+        //                 )}
+        //             </div>
+        //         </div>
+        //     )}
+        // </div>
+    
     )
 }
 

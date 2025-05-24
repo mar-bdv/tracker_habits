@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './Moods.module.scss';
 import { setMoodForDate, setTodayMood } from '../../store/moodsSlice'
 import { getLocalDateString } from '../../utils/date';
+import { motion } from "motion/react"
 
 export const moodIcons = [OneMood, TwoMood, ThreeMood, FourMood, FiveMood];
 
@@ -61,14 +62,16 @@ const Moods = ({ style, selectedMood, selectedDate }) => {
     return (
         <div className={styles.moods}>
             {moodIcons.map((Icon, i) => (
-                <div
+                <motion.div
                     key={i}
                     className={`${styles.mood_wrapper} ${selectedMoodValue === i + 1 ? styles.selected : ''}`}
                     style={style}
                     onClick={() => handleClick(i)}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
                 >
                     <Icon className={styles.mood_icon} />
-                </div>
+                </motion.div>
             ))}
         </div>
     );

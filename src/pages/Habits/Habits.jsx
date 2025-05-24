@@ -14,7 +14,7 @@ import { fetchCategories } from "../../store/categoriesSlice";
 import AddCategoryModal from "../../feautures/AddCategoryModal/AddCategoryModal";
 import { getLocalDateString } from "../../utils/date";
 import SearchHabits from "../../components/SearchHabits/SearchHabits";
-
+import { motion } from "motion/react"
 
 
 const Habits = () => {
@@ -50,20 +50,6 @@ const Habits = () => {
   const completedCount = habits.filter(h => !!h.completedDates?.[new Date().toISOString().slice(0,10)]).length;
   const withDateCount  = habits.filter(h => h.deadline && !h.completedDates?.[new Date().toISOString().slice(0,10)]).length;
 
-  // Фильтрация
-  // const today = new Date().toISOString().slice(0,10);
-  // const filteredByStatus = habits.filter(h => {
-  //   const done = !!h.completedDates?.[today];
-  //   if (filter === "active")    return !done;
-  //   if (filter === "completed") return done;
-  //   if (filter === "withDate")  return h.deadline && !done;
-  //   return true;
-  // });
-
-  // Фильтрация по категориям (если нужны оба сразу, можно комбинировать)
-  // const filteredHabits = filterCats.length === 0
-  //   ? filteredByStatus
-  //   : filteredByStatus.filter(h => filterCats.includes(h.category_id));
 
   const today = new Date().toISOString().slice(0,10);
   const filteredByStatus = habits.filter(h => {
@@ -100,12 +86,14 @@ const Habits = () => {
                 <p>Категории</p>
                 <Categories onFilterChange={setFilterCats} />                
                 {/* <button className={styles.filter_button}>Добавить свою категорию</button> */}
-                  <button
-                  className={styles.filter_button}
-                  onClick={() => setShowModal(true)}
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={styles.filter_button}
+                    onClick={() => setShowModal(true)}
                   >
                     Добавить свою категорию
-                  </button>
+                  </motion.button>
               </div>
             </div>
 
@@ -121,17 +109,17 @@ const Habits = () => {
               </div>
 
               <div className={styles.addhabit_container}>
-                <div className={styles.habits}>
+                <div className={styles.habits_list}>
 
-                <div className={styles.habits}>
-                  {filteredHabits.length > 0 ? (
-                    filteredHabits.map((habit) => (
-                      <Habit key={habit.id} habit={habit} />
-                    ))
-                  ) : (
-                    <p>Нет привычек для выбранных категорий.</p>
-                  )}
-                </div>
+                  <div className={styles.habits}>
+                    {filteredHabits.length > 0 ? (
+                      filteredHabits.map((habit) => (
+                        <Habit key={habit.id} habit={habit} />
+                      ))
+                    ) : (
+                      <p>Нет привычек для выбранных категорий.</p>
+                    )}
+                  </div>
 
                 </div>
                 <AddHabitButton userId={userId} />

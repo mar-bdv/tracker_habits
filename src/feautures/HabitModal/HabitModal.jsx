@@ -3,6 +3,7 @@ import styles from "./HabitModal.module.scss"; // Импортируем сти�
 import { updateHabit, addHabit } from "../../store/habitsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../store/categoriesSlice";
+import { motion } from "motion/react"
 
 const HabitModal = ({ isVisible, onClose, onSave, title, setTitle, notes, setNotes, category, categories, setCategory, deadline, setDeadline }) => {
     const modalRef = useRef(null);
@@ -30,7 +31,12 @@ const HabitModal = ({ isVisible, onClose, onSave, title, setTitle, notes, setNot
 
     return (
         <div className={styles.modalOverlay}>
-            <div ref={modalRef} className={styles.modal}>
+            <motion.div 
+                ref={modalRef} 
+                className={styles.modal}
+                initial={{ scale: 0 }} 
+                animate={{ scale: 1 }}
+            >
                 <div className={styles.heading_container}>
                     <h2 className={styles.heading}>Изменить задачу</h2>
                 </div>
@@ -45,17 +51,16 @@ const HabitModal = ({ isVisible, onClose, onSave, title, setTitle, notes, setNot
                     </label>
                     <label className={styles.label_text}>
                         Категория:
-
                         <select
                             id="category"
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
                             className={styles.modal_options}
-                            >
+                        >
                             <option value="">Без категории</option>
                             {categories.map((cat) => (
                                 <option key={cat.id} value={cat.name}>
-                                {cat.name}
+                                    {cat.name}
                                 </option>
                             ))}
                         </select>
@@ -69,7 +74,7 @@ const HabitModal = ({ isVisible, onClose, onSave, title, setTitle, notes, setNot
                         <button onClick={onSave} className={styles.btn_save}>Сохранить</button>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };

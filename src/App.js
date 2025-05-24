@@ -41,11 +41,11 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/" element={<Layout />}>
-                <Route path="home" element={<PrivateRoute><Home /></PrivateRoute>} />
-                <Route path="auth" element={<PrivateRoute><Auth /></PrivateRoute>} />
-                <Route path="habits" element={<PrivateRoute><Habits /></PrivateRoute>} />
-                <Route path="calendar" element={<PrivateRoute><Calendar /></PrivateRoute>} />
-                <Route path="settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+                <Route path="home" element={<PrivateRoute> <Home /> </PrivateRoute>} />
+                <Route path="auth" element={<PrivateRoute> <Auth /> </PrivateRoute>} />
+                <Route path="habits" element={<PrivateRoute> <Habits /> </PrivateRoute>} />
+                <Route path="calendar" element={<PrivateRoute> <Calendar /> </PrivateRoute>} />
+                <Route path="settings" element={<PrivateRoute> <Settings /> </PrivateRoute>} />
             </Route>
         </Routes>
     );

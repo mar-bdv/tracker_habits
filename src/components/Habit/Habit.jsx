@@ -8,6 +8,8 @@ import { addHabit } from "../../habitsThunks";
 import { deleteHabit, toggleHabit, toggleHabitForDate, updateHabit, updateHabitImmediate } from "../../store/habitsSlice";
 import { getLocalDateString } from "../../utils/date";
 import { fetchCategories } from "../../store/categoriesSlice";
+import { AnimatePresence, motion } from "framer-motion";
+
 
 const Habit = ({ style, habit, selectedDate }) => {
     const [menuVisible, setMenuVisible] = useState(false);
@@ -106,7 +108,15 @@ const Habit = ({ style, habit, selectedDate }) => {
 
     return (
       <>
-        <div className={styles.habit} style={style}>
+        <motion.div 
+          className={styles.habit} 
+          style={style}
+          layout
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.25 }}
+        >
           <label className={styles.checkboxLabel}>
             <input
               type="checkbox"
@@ -146,7 +156,7 @@ const Habit = ({ style, habit, selectedDate }) => {
               <button className={styles.option} onClick={handleDelete}>Удалить</button>
             </div>
           )}
-        </div>
+        </motion.div>
   
         <HabitModal
           habit={habit}

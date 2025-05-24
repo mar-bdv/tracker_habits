@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { toggleHabit } from '../redux/actions'; // Заменить на актуальный импорт
 import styles from './Habit.module.scss';
 
+// УДАЛИТЬ ЭТОТ КОМПОНЕНТ
+
 const EditHabitModal = ({ habit, onClose, onSave }) => {
     const [title, setTitle] = useState(habit.name);
     const [notes, setNotes] = useState(habit.notes || '');

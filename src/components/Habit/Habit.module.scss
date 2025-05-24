@@ -109,7 +109,7 @@
 
 .habit {
     position: relative;
-    padding: 10px;
+    padding: 10px 0px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -168,4 +168,11 @@
 .habit_category_container {
     display: flex;
     align-items: center;
+}
+
+
+/* Компонентам Habit добавь фиксированную высоту: */
+.habit {
+    min-height: 90px;
+    margin-bottom: 8px;  // отступ между привычками
 }

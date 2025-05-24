@@ -15,9 +15,10 @@
 }
 
 .home_container {
-    margin-left: 150px;
-    max-width: 1089px;
-    width: 100%;
+    // margin-left: 150px;
+    // max-width: 1089px;
+    // width: 100%;
+    height: 100%;
 }
 
 .hello_block {
@@ -25,18 +26,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    opacity: 0;
-    animation: fadeIn 1s forwards;
-}
-
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
 }
 
 .heading {
@@ -76,10 +65,11 @@
     border-radius: 16px;
     max-width: 493px;
     width: 100%;
-    height: 713px;
+    height: 633px;
     display: flex;
     flex-direction: column;
     align-items: center;
+
 }
 
 .habits_text {
@@ -87,10 +77,40 @@
 }
 
 .habits {
-    flex-grow: 1;
+    overflow-x: hidden;
+    // Стилизация скроллбара
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(128, 128, 128, 0.5);
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(128, 128, 128, 0.7);
+    }
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(128, 128, 128, 0.5) transparent;
+}
+
+.habits {
     width: 100%;
-    max-height: 100%;
+    box-sizing: border-box;
+    width: calc(100% - 24px);
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     overflow-y: auto;
+    max-height: 100%;
+    padding: 0;
 }
 
 .habits_filter {
@@ -106,3 +126,15 @@
     padding: 10px;
     width: 448px;
 }
+
+
+.habits {
+    flex-grow: 1;
+    width: calc(100% - 24px);
+    box-sizing: border-box;
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+

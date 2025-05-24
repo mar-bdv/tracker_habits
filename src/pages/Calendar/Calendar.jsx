@@ -196,9 +196,9 @@ export const Calendar = () => {
                             {calendarDays.map((day, index) => (
 
                                     <div 
-                                    key={index} 
-                                    className={`${styles.day} ${selectedDate?.getDate() === day ? styles.selected : ""}`} 
-                                    onClick={() => handleDayClick(day)}
+                                        key={index} 
+                                        className={`${styles.day} ${selectedDate?.getDate() === day ? styles.selected : ""}`} 
+                                        onClick={() => handleDayClick(day)}
                                     >
                                         <p className={styles.one_day}>{day || ""}</p>
                                         <div className={styles.one_mood}>  
@@ -208,19 +208,19 @@ export const Calendar = () => {
                                                 const MoodIcon = moodValue ? moodIcons[moodValue - 1] : null;
 
                                                 return (
-                                                <>
-                                                    {MoodIcon && (
-                                                    <div className={styles.calendar_mood_icon}>
-                                                        <MoodIcon width={24} height={24} />
-                                                    </div>
-                                                    )}
+                                                    <>
+                                                        {MoodIcon && (
+                                                        <div className={styles.calendar_mood_icon}>
+                                                            <MoodIcon width={24} height={24} />
+                                                        </div>
+                                                        )}
 
-                                                    {habitCountsByDate[dateKey] > 0 && (
-                                                    <div className={styles.habit_count}>
-                                                        {habitCountsByDate[dateKey]}
-                                                    </div>
-                                                    )}
-                                                </>
+                                                        {habitCountsByDate[dateKey] > 0 && (
+                                                        <div className={styles.habit_count}>
+                                                            {habitCountsByDate[dateKey]}
+                                                        </div>
+                                                        )}
+                                                    </>
                                                 );
                                             })()}
                                         </div>

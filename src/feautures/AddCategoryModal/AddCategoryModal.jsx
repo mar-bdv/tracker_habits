@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import styles from "./AddCategoryModal.module.scss";
 import { addCategory } from "../../store/categoriesSlice";
-
+import { motion } from "motion/react"
 
 const AddCategoryModal = ({ onClose, userId }) => {
     const dispatch = useDispatch();
@@ -34,7 +34,11 @@ const AddCategoryModal = ({ onClose, userId }) => {
 
     return (
         <div className={styles.backdrop}>
-            <div className={styles.modal}>
+            <motion.div 
+                className={styles.modal}
+                initial={{ scale: 0 }} 
+                animate={{ scale: 1 }}
+            >
                 <div className={styles.header}>
                     <h3 className={styles.title}>Добавить категорию</h3>
                 </div>
@@ -55,7 +59,7 @@ const AddCategoryModal = ({ onClose, userId }) => {
                     <button className={styles.cancelBtn} onClick={onClose}>Отмена</button>
                     <button className={styles.addBtn} onClick={handleAdd}>Добавить</button>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };

@@ -13,22 +13,19 @@ import { addHabit, fetchHabitCompletions, fetchHabits } from "../../store/habits
 import { getLocalDateString } from "../../utils/date";
 import { fetchCategories } from "../../store/categoriesSlice";
 import { fetchTodayMood } from "../../store/moodsSlice";
-
+import { AnimatePresence, motion } from "motion/react"
 
 const Home = () => {
     const dispatch = useDispatch();
 
-    const [filter, setFilter] = useState("all"); // all | active | completed | withDate
+    const [filter, setFilter] = useState("all");
     const [selectedDate, setSelectedDate] = useState(new Date());
 
-    // Получаем userId из Redux (или если оно в localStorage, то используем его)
     const userId = useSelector((state) => state.auth.user?.id);
     const user = useSelector((state) => state.auth.user);
     const habits = useSelector((state) => state.habits.habits);
-    const status = useSelector((state) => state.habits.status);
-    const error = useSelector((state) => state.habits.error);
 
-    const dateStr = getLocalDateString(selectedDate); // формат "2025-05-08"
+    const dateStr = getLocalDateString(selectedDate);
 
     const moodsByDate = useSelector((state) => state.moods.moodsByDate);
     const selectedMood = moodsByDate?.[dateStr] || null;
@@ -38,7 +35,6 @@ const Home = () => {
             dispatch(fetchHabits(userId));
             dispatch(fetchCategories(userId));
             dispatch(fetchTodayMood(userId));
-            // dispatch(fetchHabitCompletions({ userId, date: dateStr }));
         }
     }, [userId, selectedDate, dispatch]);
 
@@ -65,17 +61,22 @@ const Home = () => {
         }
     });
 
-
     const activeCount = habits.filter(h => !h.completedDates?.[dateStr]).length;
     const completedCount = habits.filter(h =>  h.completedDates?.[dateStr]).length;
     const withDateCount = habits.filter(h => h.deadline && !h.completedDates?.[dateStr]).length;
 
     return (
         <div className={styles.home_container}>
-            <div className={styles.hello_block}>
-                <p className={styles.heading}>привет, <span className={styles.heading_span}>{user?.nickname || 'Пользователь'}</span>!</p>
+            <motion.div 
+                className={styles.hello_block}
+                initial={{ scale: 0 }} 
+                animate={{ scale: 1 }}
+            >
+                <p className={styles.heading}>привет, 
+                    <span className={styles.heading_span}>{user?.nickname || 'Пользователь'}</span>!
+                </p>
                 <p className={styles.hello_descr}>твой прогресс на сегодня:</p>
-            </div>
+            </motion.div>
 
             <div className={styles.two_blocks}>
 
@@ -91,20 +92,18 @@ const Home = () => {
                         />
                     </div>
 
-                    {/* КОНТЕЙНЕР */}
                     <div className={styles.habits_list}>
-                        {/* ПРИВЫЧКИ */}
-                        <div className={styles.habits}>
-
-                            {filteredHabits.map(habit => (
-                                <Habit
-                                    key={habit.id}
-                                    habit={habit}
-                                    selectedDate={dateStr}
-                                />
-                            ))}
-
-                        </div>
+                        <motion.div layout className={styles.habits}>
+                            <AnimatePresence mode="sync">
+                                {filteredHabits.map(habit => (
+                                    <Habit
+                                        key={habit.id}
+                                        habit={habit}
+                                        selectedDate={dateStr}
+                                    />
+                                ))}
+                            </AnimatePresence>
+                        </motion.div>
 
                         <AddHabitButton onAdd={(name) => dispatch(addHabit(name))} />
                     </div>
@@ -122,11 +121,8 @@ const Home = () => {
                         <Moods 
                             selectedMood={selectedMood} 
                             selectedDate={selectedDate} 
-
                         />
                     </div>
-
-
                 </div>
             </div>
         </div>

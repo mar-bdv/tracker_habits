@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./Categories.module.scss";
 import deleteImg from "../../images/delete_btn.png"
 import { deleteCategory, fetchCategories, hideCategoryForUser } from "../../store/categoriesSlice";
-
+import { motion } from "motion/react"
 
 const Categories = ({ onFilterChange }) => {
   const dispatch = useDispatch();
@@ -50,18 +50,25 @@ const Categories = ({ onFilterChange }) => {
 
   return (
     <div className={styles.categories}>
-      <label
+      <motion.label
         className={`${styles.one_category} ${selected.length === 0 ? styles.selected : ""}`}
         onClick={handleShowAll}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
       >
         <span>Отобразить все</span>
-      </label>
+      </motion.label>
 
       {categories.length === 0 ? (
         <p className={styles.empty}>Нет категорий</p>
       ) : (
         categories.map((cat) => (
-          <div key={cat.id} className={`${styles.one_category} ${selected.includes(cat.id) ? styles.selected : ""}`}>
+          <motion.div 
+            key={cat.id} 
+            className={`${styles.one_category} ${selected.includes(cat.id) ? styles.selected : ""}`}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+          >
             <span
               className={`${styles.category_name}`}
               onClick={() => toggleSelect(cat.id)}
@@ -76,7 +83,7 @@ const Categories = ({ onFilterChange }) => {
             >
               <img src={deleteImg} alt="×" />
             </button>
-          </div>
+          </motion.div>
         ))
       )}
     </div>

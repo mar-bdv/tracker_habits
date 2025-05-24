@@ -3,6 +3,8 @@ import { useState } from "react";
 import styles from "./AddHabitButton.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { addHabit } from "../../store/habitsSlice"
+import { motion } from "motion/react"
+
 
 const AddHabitButton = () => {
     const [isEditing, setIsEditing] = useState(false);
