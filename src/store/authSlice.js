@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../supabaseClient";
 
-// Регистрация
+
 export const signUpUser = createAsyncThunk(
   'auth/signUpUser',
   async ({ email, password, nickname }, thunkAPI) => {
@@ -13,7 +13,16 @@ export const signUpUser = createAsyncThunk(
       },
     });
 
-    if (error) return thunkAPI.rejectWithValue(error.message);
+    if (error) {
+      // Показываем общую понятную ошибку, если ошибка от supabase выглядит "технически"
+      const friendlyMessage = error.message.toLowerCase().includes('invalid') ||
+                              error.message.toLowerCase().includes('character') ||
+                              error.message.toLowerCase().includes('format')
+        ? 'Произошла ошибка! Попробуйте ещё раз.'
+        : error.message;
+
+      return thunkAPI.rejectWithValue(friendlyMessage);
+    }
 
     const user = data.user;
 
@@ -21,7 +30,9 @@ export const signUpUser = createAsyncThunk(
       .from('users')
       .insert([{ id: user.id, email, nickname }]);
 
-    if (userError) return thunkAPI.rejectWithValue(userError.message);
+    if (userError) {
+      return thunkAPI.rejectWithValue('Произошла ошибка при создании пользователя. Попробуйте ещё раз.');
+    }
 
     return {
       id: user.id,
@@ -31,7 +42,8 @@ export const signUpUser = createAsyncThunk(
   }
 );
 
-// Вход
+
+
 export const signInUser = createAsyncThunk(
   "auth/signInUser",
   async ({ email, password }, thunkAPI) => {
@@ -40,7 +52,14 @@ export const signInUser = createAsyncThunk(
       password,
     });
 
-    if (error) return thunkAPI.rejectWithValue(error.message);
+    if (error) {
+      // Преобразуем техническое сообщение в понятное
+      const errorMessage =
+        error.message === "Invalid login credentials"
+          ? "Неверный пароль или email"
+          : error.message;
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
 
     const user = data.user;
 
@@ -182,7 +201,7 @@ const authSlice = createSlice({
       })
       .addCase(signInUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload || "Произошла ошибка входа";
       })
 
       .addCase(signOutUser.fulfilled, (state) => {

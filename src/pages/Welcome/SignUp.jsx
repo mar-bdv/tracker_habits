@@ -1,50 +1,9 @@
-// import { Link } from "react-router-dom";
-// import styles from "./WelcomePage.module.scss";
-
-// const SignUp = () => {
-//     return (
-//         <div className={styles.container}>
-//             <h1 className={styles.heading}>трекер привычек</h1>
-//             <div className={styles.options_input}>
-//                 <p className={styles.start_text_signup}>Создайте свой аккаунт!</p>
-                
-//                 <div className={styles.block_input}>
-//                     <p className={styles.text_input}>Имя</p>
-//                     <input type="text" className={styles.input} placeholder="Мария Ивановна"/>
-//                 </div>
-
-//                 <div className={styles.block_input}>
-//                     <p className={styles.text_input}>Email*</p>
-//                     <input type="text" className={styles.input} placeholder="maria@gmail.com"/>
-//                     <p className={styles.descr_input}>*без строгой валидации, можно ввести фейковый</p>
-//                 </div>
-
-//                 <div className={styles.block_input}>
-//                     <p className={styles.text_input}>Пароль*</p>
-//                     <input type="text" className={styles.input} placeholder="Придумайте пароль"/>
-//                     <p className={styles.descr_input}>*минимум 6 символов</p>
-                    
-//                 </div>
-                
-//                 <div className={styles.block_btns}>
-//                     <a href="/" className={styles.btn_link}>Зарегистрироваться</a>
-//                     <div className={styles.block_link}>
-//                         <p className={styles.text_link}>Уже есть аккаунт? <Link to="/signin" className={styles.link}>Войти в аккаунт</Link></p>
-//                         <p className={styles.text_link}>Попробовать <Link to="/" className={styles.link}>демо</Link> без регистрации</p>
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default SignUp;
-
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpUser } from "../../store/authSlice";
 import { Link } from "react-router-dom";
 import styles from "./WelcomePage.module.scss";
+import { motion } from "motion/react"
 
 const SignUp = () => {
     const dispatch = useDispatch();
@@ -63,45 +22,53 @@ const SignUp = () => {
         <div className={styles.container}>
             <h1 className={styles.heading}>Создайте свой аккаунт!</h1>
             <form onSubmit={handleSubmit} className={styles.form}>
-                <div className={styles.block_input}>
-                    <p className={styles.text_input}>Имя</p>
-                    <input
-                        type="text"
-                        className={styles.input}
-                        placeholder="Мария Ивановна"
-                        value={nickname}
-                        onChange={(e) => setNickname(e.target.value)}
-                        required
-                    />
+                    <div className={styles.block_input}>
+                        <p className={styles.text_input}>Имя</p>
+                        <input
+                            type="text"
+                            className={styles.input}
+                            placeholder="Мария Ивановна"
+                            value={nickname}
+                            onChange={(e) => setNickname(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className={styles.block_input}>
+                        <p className={styles.text_input}>Email*</p>
+                        <input
+                            type="email"
+                            className={styles.input}
+                            placeholder="maria@gmail.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                        <p className={styles.input_warning}>*без строгой валидации, можно ввести фейковый</p>
+                    </div>
+
+                    <div className={styles.block_input}>
+                        <p className={styles.text_input}>Пароль*</p>
+                        <input
+                            type="password"
+                            className={styles.input}
+                            placeholder="Придумайте пароль"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        <p className={styles.input_warning}>*минимум 6 символов</p>
                 </div>
 
-                <div className={styles.block_input}>
-                    <p className={styles.text_input}>Email*</p>
-                    <input
-                        type="email"
-                        className={styles.input}
-                        placeholder="maria@gmail.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-
-                <div className={styles.block_input}>
-                    <p className={styles.text_input}>Пароль*</p>
-                    <input
-                        type="password"
-                        className={styles.input}
-                        placeholder="Придумайте пароль"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-
-                <button type="submit" className={styles.btn_link} disabled={loading}>
+                <motion.button 
+                    type="submit" 
+                    className={styles.btn_link} 
+                    disabled={loading}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                >
                     {loading ? "Загрузка..." : "Зарегистрироваться"}
-                </button>
+                </motion.button>
 
                 {error && <p className={styles.error}>{error}</p>}
 
