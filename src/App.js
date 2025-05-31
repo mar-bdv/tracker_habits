@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "./store/authSlice";
 import PrivateRoute from "./PrivateRoute";
-
+import './fonts.scss';
 
 function App() {
     const dispatch = useDispatch();

@@ -18,7 +18,7 @@ const Navigation = () => {
     return (
         <div className={styles.container}>
             <div className={styles.block_avatar}>
-                <img className={styles.img} src={user?.avatar_url}/>
+                <img className={styles.img} src={user?.avatar_url || 'https://i.ibb.co/3y45FgtQ/img.png'}/>
                 <p className={styles.nickname}>{user?.nickname || 'Пользователь'}</p>
             </div>
 

@@ -40,6 +40,7 @@ export const signUpUser = createAsyncThunk(
       nickname: user.user_metadata?.nickname || '',
     };
   }
+  
 );
 
 
@@ -166,6 +167,73 @@ export const updateNickname = createAsyncThunk(
   }
 );
 
+export const createDemoUser = createAsyncThunk(
+  'auth/createDemoUser',
+  async (_, thunkAPI) => {
+    const generateRandomString = (length = 10) =>
+      Math.random().toString(36).slice(2, 2 + length);
+
+    const email = `demo_${Date.now()}@demo.app`;
+    const password = generateRandomString(12);
+    const nickname = `User${Math.floor(Math.random() * 10000)}`;
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // +24 часа
+
+    // 1. Регистрируем пользователя
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { nickname },
+      },
+    });
+
+    if (error || !data?.user) {
+      return thunkAPI.rejectWithValue(
+        error?.message || 'Не удалось создать демо-пользователя'
+      );
+    }
+
+    const user = data.user;
+
+    // 2. Добавляем в таблицу `users`
+    const { error: insertError } = await supabase.from('users').insert([
+      {
+        id: user.id,
+        email,
+        nickname,
+        is_demo: true,
+        expires_at: expiresAt,
+      },
+    ]);
+
+    if (insertError) {
+      return thunkAPI.rejectWithValue(
+        'Ошибка при создании профиля демо-пользователя'
+      );
+    }
+
+    // 3. Сразу входим под ним
+    const { data: signInData, error: signInError } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+    if (signInError || !signInData?.user) {
+      return thunkAPI.rejectWithValue(
+        signInError?.message || 'Не удалось войти в демо-режим'
+      );
+    }
+
+    return {
+      id: signInData.user.id,
+      email,
+      nickname,
+    };
+  }
+);
+
+
 
 // Слайс авторизации
 const authSlice = createSlice({
@@ -235,6 +303,19 @@ const authSlice = createSlice({
         if (state.user) {
           state.user.nickname = action.payload;
         }
+      })
+
+      .addCase(createDemoUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createDemoUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(createDemoUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
   },
 });
