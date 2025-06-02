@@ -15,6 +15,7 @@ import AddCategoryModal from "../../feautures/AddCategoryModal/AddCategoryModal"
 import { getLocalDateString } from "../../utils/date";
 import SearchHabits from "../../components/SearchHabits/SearchHabits";
 import { motion } from "motion/react"
+import arrow_cat from "../../images/arrow_cat.svg"
 
 
 const Habits = () => {
@@ -28,6 +29,7 @@ const Habits = () => {
   const [filterCats, setFilterCats] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [catsOpen, setCatsOpen] = useState(true); 
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const dateStr = getLocalDateString(selectedDate); // формат "2025-05-08"
@@ -83,9 +85,24 @@ const Habits = () => {
                 </div>
 
               <div className={styles.categories_block}>
-                <p>Категории</p>
-                <Categories onFilterChange={setFilterCats} />                
-                {/* <button className={styles.filter_button}>Добавить свою категорию</button> */}
+                <div
+                  className={styles.categories_header}
+                  onClick={() => setCatsOpen((v) => !v)}
+                >
+                  <span className={styles.categories_name}>Категории</span>
+                  <span
+                    className={`${styles.arrow} ${catsOpen ? styles.open : ""}`}
+                  >
+                    <img src={arrow_cat} alt="Стрелочка" />
+                  </span>
+                </div>
+                <div
+                  className={styles.categories_list}
+                  style={{
+                    display: catsOpen ? "block" : "none"
+                  }}
+                >
+                  <Categories onFilterChange={setFilterCats} />
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
@@ -94,6 +111,7 @@ const Habits = () => {
                   >
                     Добавить свою категорию
                   </motion.button>
+                </div>
               </div>
             </div>
 

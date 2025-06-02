@@ -46,47 +46,8 @@
     background-color: #C5C5C5;
 }
 
-
-// .one_category {
-//     display: inline-block;
-//     background-color: $input;
-//     padding: 10px 20px;
-//     max-width: 200px;
-//     border-radius: 8px;
-//     white-space: nowrap;
-//     overflow: hidden;
-//     text-overflow: ellipsis;
-//     position: relative;
-//     cursor: pointer;
-// }
-
-// .category_name {
-//     flex-shrink: 1;
-//     overflow: hidden;
-//     text-overflow: ellipsis;
-// }
-
-// .categories {
-//     display: flex;
-//     flex-wrap: wrap;
-//     gap: 10px;
-// }
-
-// .first_category {
-//     background-color: #c1c0c0;
-// }
-
-// .close_icon {
-//     position: absolute;
-//     right: 25px;
-//     cursor: pointer;
-//     opacity: 0;
-//     transition: opacity 0.2s ease-in-out;
-//     background-color: transparent;
-//     border: none;
-//     padding: 5px;
-// }
-
-// .one_category:hover .close_icon {
-//     opacity: 1;
-// }
+@media (max-width: 420px) {
+    .category_name, .one_category {
+        font-size: 14px;
+    }
+}

@@ -31,6 +31,7 @@
     width: 100%;
     max-width: 700px;
 
+
     .weekdays {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
@@ -99,6 +100,7 @@
     display: flex;
     justify-content: space-evenly;
     margin: 20px 0px;
+    max-width: 700px;
 }
 
 .container_calendar {
@@ -106,11 +108,11 @@
     border: 1px solid $border;
     border-radius: 20px;
     display: flex;
-    min-width: 1200px;
+    max-width: 1200px;
     margin-left: 50px;
-    height: 800px;
+    height: auto;
     padding: 20px;
-
+    flex-wrap: wrap;
 
 }
 
@@ -126,7 +128,6 @@
     width: 380px;
     margin-left: 80px;
     padding: 10px;
-
 }
 
 .date_block {
@@ -194,18 +195,6 @@
     border: 2px solid $main !important;
 }
 
-.calendar_mood_icon {
-    // position: absolute;
-    // bottom: 2px;
-    // right: 2px;
-    // width: 16px;
-    // height: 16px;
-
-    // svg {
-    //     width: 100%;
-    //     height: 100%;
-    // }
-}
 
 .day {
     position: relative;
@@ -232,6 +221,8 @@
     right: 12px;
     width: 20px;
     height: 20px;
+
+    
 }
 
 .habit_count {
@@ -261,4 +252,111 @@
     margin-left: 8px;
     font-size: 14px;
     line-height: 1;
+}
+
+@media (max-width: 460px) {
+    .container {
+        margin: 100px 0px 0px 0px;
+    }
+
+    .heading {
+        font-size: 18px;
+
+    }
+    
+    .right_date {
+        font-size: 16px;
+
+    }
+
+    .heading_block {
+        margin-left: 0px;
+    }
+
+    .navigation {
+        max-width: 230px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    
+    .your_habits {
+        margin-left: 15px;
+
+    }
+
+    .monthName {
+        font-size: 16px;
+    }
+
+    .arrow_img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .container_calendar {
+        flex-direction: column;
+        height: auto;
+        min-width: auto;
+        margin: 0px;
+    }
+
+    .calendar {
+        max-width: 336px;
+        .day {
+            width: 44px;
+            height: 44px;
+        }
+        .one_day {
+            font-size: 16px;
+        }
+
+        .days {
+            width: auto;
+        }
+
+        .habit_count {
+            font-size: 10px;
+            width: 10px;
+            height: 10px;
+        }
+    }
+
+    .habits {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .right_block {
+        width: 346px;
+        margin-left: 0px;
+        padding: 10px;
+    }
+
+    .moods_block {
+        margin-left: 10px;
+    }
+
+    .calendar_mood_icon {
+        right: 5px;
+        bottom: 5px;
+        width: 10px;
+        height: 10px;
+        display: inline-flex;
+        border-radius: 50%;
+        background-color: $main;
+
+    }
+}
+
+.weekdays div {
+    &::after {
+        content: attr(data-full);
+    }
+
+    @media (max-width: 420px) {
+        &::after {
+            content: attr(data-short);
+        }
+    }
 }

@@ -4,3 +4,13 @@
     font-size: 14px;
     font-weight: bold;
 }
+
+@media (max-width: 480px) {
+    .statistics_block {
+        flex-direction: column;
+        margin: 25px 0px;
+    }
+    .statistics_text {
+        margin: 3px;
+    }
+}

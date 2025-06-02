@@ -8,6 +8,7 @@
     &.selected {
         color: #ffc400;
     }
+
 }
 .mood_wrapper {
     display: inline-flex;
@@ -33,4 +34,8 @@
 .moods {
     display: flex;;
     gap: 20px;
+    @media (max-width: 420px) {
+        justify-content: space-around;
+        gap: 0px;
+    }
 }

@@ -22,3 +22,8 @@
     transition: width 0.3s ease-in-out;
 }
 
+@media (max-width: 420px) {
+    .progressBar {
+        width: 295px;
+    }
+}

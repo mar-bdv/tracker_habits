@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import HowManyPercentDone from "../../components/HowManyPercentDone/HowManyPercentDone";
 import styles from "./Calendar.module.scss";
 import leftArrow from "../../images/left_arrow_month.png"
@@ -30,6 +30,19 @@ export const Calendar = () => {
     const dateStr = getLocalDateString(selectedDate); // "YYYY-MM-DD"
     const selectedMood = moodsByDate?.[dateStr] || null;
 
+    const fullWeekdays = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
+    const shortWeekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 420);
+    
+    useLayoutEffect(() => {
+        setIsMobile(window.innerWidth <= 420);
+    }, []);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth <= 420);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     const currentMonth = currentDate.getMonth(); // Месяц (0-11)
     const currentYear = currentDate.getFullYear(); // Год
@@ -168,7 +181,7 @@ export const Calendar = () => {
                             onClick={() => changeMonth(-1)}
                             disabled={currentDate.getMonth() <= new Date().getMonth() - 3}
                         >
-                            <img src={leftArrow} alt="стрелка влево" />
+                            <img className={styles.arrow_img} src={leftArrow} alt="стрелка влево" />
                         </button>
 
                         <div className={styles.monthName}>{getMonthName(currentMonth)} {currentYear}</div>
@@ -178,7 +191,7 @@ export const Calendar = () => {
                             onClick={() => changeMonth(1)}
                             disabled={currentDate.getMonth() >= new Date().getMonth() + 3}
                         >
-                            <img src={rightArrow} alt="стрелка вправо" />
+                            <img className={styles.arrow_img} src={rightArrow} alt="стрелка вправо" />
 
                         </button>
                     </div>
@@ -186,8 +199,14 @@ export const Calendar = () => {
                     <div className={styles.calendar}>
                         {/* Дни недели */}
                         <div className={styles.weekdays}>
-                            {["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"].map((day, index) => (
-                            <div key={index}>{day}</div>
+                            {(isMobile ? shortWeekdays : fullWeekdays).map((day, index) => (
+                                <div 
+                                    key={index}
+                                    data-full={fullWeekdays[index]}
+                                    data-short={shortWeekdays[index]}
+                                >
+                                    {/* {day} */}
+                                </div>
                             ))}
                         </div>
 
@@ -210,15 +229,18 @@ export const Calendar = () => {
                                                 return (
                                                     <>
                                                         {MoodIcon && (
-                                                        <div className={styles.calendar_mood_icon}>
-                                                            <MoodIcon width={24} height={24} />
-                                                        </div>
+                                                            <div className={styles.calendar_mood_icon}>
+                                                                <MoodIcon
+                                                                    width={window.innerWidth <= 420 ? 8 : 24}
+                                                                    height={window.innerWidth <= 420 ? 8 : 24}
+                                                                />
+                                                            </div>
                                                         )}
 
                                                         {habitCountsByDate[dateKey] > 0 && (
-                                                        <div className={styles.habit_count}>
-                                                            {habitCountsByDate[dateKey]}
-                                                        </div>
+                                                            <div className={styles.habit_count}>
+                                                                {habitCountsByDate[dateKey]}
+                                                            </div>
                                                         )}
                                                     </>
                                                 );
@@ -280,7 +302,7 @@ export const Calendar = () => {
                         <div className={styles.moods_block}>
                             <p className={styles.mood_text}>Какое у вас сегодня настроение?</p>
                             <Moods 
-                                style={{ width: "35px", margin: "10px" }}  
+                                style={{ width: "35px", margin: "10px", gap: "0px" }}  
                                 selectedMood={selectedMood} 
                                 selectedDate={selectedDate} 
                                 userId={userId}

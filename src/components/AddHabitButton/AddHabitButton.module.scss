@@ -51,3 +51,13 @@
     margin: 20px;
 }
 
+
+@media (max-width: 420px) {
+    .button {
+        width: 300px;
+    }
+    .inputContainer {
+        width: 340px;
+
+    }
+}

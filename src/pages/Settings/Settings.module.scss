@@ -110,3 +110,49 @@
 .changeName_block {
     margin-top: 15px;
 }
+
+@media (max-width: 420px) {
+    .input_block {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .input {
+        width: 100%;
+        max-width: 350px;
+        margin-bottom: 20px;
+    }
+
+    .save_btn {
+        margin-left: auto;
+
+    }
+
+    .top_block {
+        margin: 0px;
+    }
+
+    .container {
+        margin-top: 80px;
+    }
+
+    .settings_block {
+        max-width: 370px;
+        height: auto;
+        margin: 0px;
+        padding: 20px;
+    }
+    .header {
+        font-size: 18px;
+    }
+
+    .themes_btns {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 40px;
+    }
+    
+    .bottom_block {
+        margin: 80px 0px 20px 0px;
+    }
+}

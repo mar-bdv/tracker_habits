@@ -4,6 +4,9 @@ body {
     background-color: $background;
     font-family: "Lato", sans-serif;
     color: $text;
+    @media (max-width: 420px) {
+        margin: 0px;
+    }
 }
 
 ::selection {
@@ -83,7 +86,6 @@ body {
     padding: 10px 30px;
     font-family: "Rubik Mono One", monospace;
     color: $text;
-    margin: 20px 0px;
     border: none;
     width: 402px;
     cursor: pointer;

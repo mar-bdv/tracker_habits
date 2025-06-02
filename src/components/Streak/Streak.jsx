@@ -27,10 +27,10 @@ const Streak = () => {
     }
 
     return (
-        <div className="">
-        <h2 className="">
-            Твоя серия: {count} {count === 1 ? "день" : "дня"} подряд
-        </h2>
+        <div className={styles.streak_container}>
+            <h2 className={styles.streak}>
+                Твоя серия: {count} {count === 1 ? "день" : "дня"} подряд
+            </h2>
         </div>
     );
 };

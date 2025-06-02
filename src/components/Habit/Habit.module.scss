@@ -12,6 +12,9 @@
     border-radius: 15px;
     height: 85px;
     position: relative;
+    @media (max-width: 460px) {
+        width: 296px;
+    }
 }
 
 .habit_calendar {
@@ -91,8 +94,6 @@
     transform: rotate(45deg);
 }
 
-
-/* Кнопка с тремя точками */
 .dotsButton {
     position: absolute;
     top: 10px;
@@ -171,8 +172,7 @@
 }
 
 
-/* Компонентам Habit добавь фиксированную высоту: */
 .habit {
     min-height: 90px;
-    margin-bottom: 8px;  // отступ между привычками
+    margin-bottom: 8px;
 }

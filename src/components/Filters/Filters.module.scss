@@ -23,3 +23,13 @@
     line-height: 1;
     cursor: default;
 }
+
+@media (max-width: 420px) {
+    .filters, .filter_count {
+        font-size: 12px;
+    }
+    
+    .filters {
+        margin-left: 15px;
+    }
+}

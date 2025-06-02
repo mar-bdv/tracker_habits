@@ -9,3 +9,9 @@
     padding: 10px 15px;
     font-size: 16px;
 }
+
+@media (max-width: 420px) {
+    .input {
+        width: 300px;
+    }
+}
