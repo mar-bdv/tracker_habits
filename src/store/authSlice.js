@@ -2,9 +2,52 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../supabaseClient";
 
 
+// export const signUpUser = createAsyncThunk(
+//   'auth/signUpUser',
+//   async ({ email, password, nickname }, thunkAPI) => {
+//     const { data, error } = await supabase.auth.signUp({
+//       email,
+//       password,
+//       options: {
+//         data: { nickname },
+//       },
+//     });
+
+//     if (error) {
+//       // Показываем общую понятную ошибку, если ошибка от supabase выглядит "технически"
+//       const friendlyMessage = error.message.toLowerCase().includes('invalid') ||
+//                               error.message.toLowerCase().includes('character') ||
+//                               error.message.toLowerCase().includes('format')
+//         ? 'Произошла ошибка! Попробуйте ещё раз.'
+//         : error.message;
+
+//       return thunkAPI.rejectWithValue(friendlyMessage);
+//     }
+
+//     const user = data.user;
+
+//     const { error: userError } = await supabase
+//       .from('users')
+//       .insert([{ id: user.id, email, nickname }]);
+
+//     if (userError) {
+//       return thunkAPI.rejectWithValue('Произошла ошибка при создании пользователя. Попробуйте ещё раз.');
+//     }
+
+//     return {
+//       id: user.id,
+//       email: user.email,
+//       nickname: user.user_metadata?.nickname || '',
+//     };
+//   }
+  
+// );
+
 export const signUpUser = createAsyncThunk(
   'auth/signUpUser',
   async ({ email, password, nickname }, thunkAPI) => {
+    const { dispatch } = thunkAPI;
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -14,7 +57,6 @@ export const signUpUser = createAsyncThunk(
     });
 
     if (error) {
-      // Показываем общую понятную ошибку, если ошибка от supabase выглядит "технически"
       const friendlyMessage = error.message.toLowerCase().includes('invalid') ||
                               error.message.toLowerCase().includes('character') ||
                               error.message.toLowerCase().includes('format')
@@ -34,13 +76,31 @@ export const signUpUser = createAsyncThunk(
       return thunkAPI.rejectWithValue('Произошла ошибка при создании пользователя. Попробуйте ещё раз.');
     }
 
+    await dispatch(signInUser({ email, password }));
+
     return {
       id: user.id,
       email: user.email,
-      nickname: user.user_metadata?.nickname || '',
+      nickname: nickname,
     };
   }
-  
+);
+
+export const deleteAccount = createAsyncThunk(
+  "auth/deleteAccount",
+  async (userId, thunkAPI) => {
+    // Удаляем все привычки пользователя
+    await supabase.from("habits").delete().eq("user_id", userId);
+
+    // Удаляем пользователя из таблицы users
+    await supabase.from("users").delete().eq("id", userId);
+
+    // Выходим из аккаунта
+    await supabase.auth.signOut();
+
+    // Очищаем пользователя в Redux
+    return userId;
+  }
 );
 
 
@@ -316,6 +376,11 @@ const authSlice = createSlice({
       .addCase(createDemoUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      .addCase(deleteAccount.fulfilled, (state) => {
+        state.user = null;
+        state.status = "idle";
       })
   },
 });

@@ -1,22 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { signUpUser } from "../../store/authSlice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./WelcomePage.module.scss";
 import { motion } from "motion/react"
 
 const SignUp = () => {
     const dispatch = useDispatch();
-    const { loading, error } = useSelector((state) => state.auth);
+    const { user, loading, error } = useSelector((state) => state.auth);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [nickname, setNickname] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (nickname.length > 20) {
+            alert("Имя не должно превышать 20 символов.");
+            return;
+        }
+
         dispatch(signUpUser({ email, password, nickname }));
     };
+
+    useEffect(() => {
+        if (user) navigate("/home");
+    }, [user, navigate]);
 
     return (
         <div className={styles.container}>
@@ -31,6 +42,7 @@ const SignUp = () => {
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
                             required
+                            maxLength={20}
                         />
                     </div>
 

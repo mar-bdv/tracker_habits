@@ -1,13 +1,20 @@
 import { useState } from "react";
 import styles from "./Settings.module.scss"
 import { useDispatch, useSelector } from "react-redux";
-import { updateAvatar, updateNickname } from "../../store/authSlice";
+import { deleteAccount, updateAvatar, updateNickname } from "../../store/authSlice";
 import AddImage from "../../components/AddImage/AddImage";
+import { deleteAllHabits } from "../../store/habitsSlice";
+import ResetHabitsModal from "../../feautures/ResetHabitsModal/ResetHabitsModal";
+import { useNavigate } from "react-router-dom";
+import DeleteAccountModal from "../../feautures/DeleteAccountModal/DeleteAccountModal";
 
 
 export const Settings = () => {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [nicknameInput, setNicknameInput] = useState("");
+    const [showResetModal, setShowResetModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const navigate = useNavigate();
 
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.user);
@@ -44,6 +51,7 @@ export const Settings = () => {
                                     value={nicknameInput}
                                     onChange={(e) => setNicknameInput(e.target.value)}
                                     placeholder={"Ваше имя"}
+                                    maxLength={20}
                                 />
                                 <button className={styles.save_btn} onClick={handleSaveNickname}>
                                     Сохранить
@@ -68,9 +76,42 @@ export const Settings = () => {
                     </div>
 
                     <div className={styles.bottom_block}>
-                        <button className={styles.del_btn}>Сбросить все привычки</button>
-                        <button className={styles.del_btn}>Снести аккаунт</button>
+                        <button 
+                            className={styles.del_btn}
+                            onClick={() => setShowResetModal(true)}
+                        >
+                            Сбросить все привычки
+                        </button>
+                        <button 
+                            className={styles.del_btn}
+                            onClick={() => setShowDeleteModal(true)}
+                        >
+                            Снести аккаунт
+                        </button>
                     </div>
+
+                    {showResetModal && (
+                        <ResetHabitsModal
+                            onConfirm={() => {
+                                if (user) dispatch(deleteAllHabits(user.id));
+                                setShowResetModal(false);
+                            }}
+                            onCancel={() => setShowResetModal(false)}
+                        />
+                    )}
+
+                    {showDeleteModal && (
+                        <DeleteAccountModal
+                            onConfirm={async () => {
+                            if (user) {
+                                await dispatch(deleteAccount(user.id));
+                                setShowDeleteModal(false);
+                                navigate("/WelcomePage");
+                            }
+                            }}
+                            onCancel={() => setShowDeleteModal(false)}
+                        />
+                    )}
 
                 </div>
             </div>

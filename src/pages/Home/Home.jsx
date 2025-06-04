@@ -94,7 +94,7 @@ const Home = () => {
 
                     <div className={styles.habits_list}>
                         <motion.div layout className={styles.habits}>
-                            <AnimatePresence mode="sync">
+                            {/* <AnimatePresence mode="sync">
                                 {filteredHabits.map(habit => (
                                     <Habit
                                         key={habit.id}
@@ -102,6 +102,25 @@ const Home = () => {
                                         selectedDate={dateStr}
                                     />
                                 ))}
+                            </AnimatePresence> */}
+                            <AnimatePresence mode="sync">
+                                {habits.length === 0 ? (
+                                    <motion.p
+                                        className={styles.no_habits_message}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                    >
+                                        Добавьте свою первую привычку!
+                                    </motion.p>
+                                ) : (
+                                    filteredHabits.map(habit => (
+                                        <Habit
+                                            key={habit.id}
+                                            habit={habit}
+                                            selectedDate={dateStr}
+                                        />
+                                    ))
+                                )}
                             </AnimatePresence>
                         </motion.div>
 

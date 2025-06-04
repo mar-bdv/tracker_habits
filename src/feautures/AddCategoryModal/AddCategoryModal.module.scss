@@ -105,3 +105,13 @@
     margin-right: auto;
     margin-left: 25px;
 }
+
+@media (max-width: 420px) {
+    .modal {
+        width: 350px;
+    }
+
+    .input_container {
+        max-width: 300px;
+    }
+}

@@ -232,6 +232,19 @@ export const fetchHabitCompletions = createAsyncThunk(
   }
 );
 
+export const deleteAllHabits = createAsyncThunk(
+  "habits/deleteAllHabits",
+  async (userId, thunkAPI) => {
+    const { error } = await supabase
+      .from("habits")
+      .delete()
+      .eq("user_id", userId);
+
+    if (error) return thunkAPI.rejectWithValue(error.message);
+    return;
+  }
+);
+
 
 const habitsSlice = createSlice({
   name: "habits",
@@ -266,10 +279,10 @@ const habitsSlice = createSlice({
 
       // ADD
       .addCase(addHabit.fulfilled, (state, action) => {
-
         state.habits.push(action.payload);
-
       })
+
+
 
       .addCase(updateHabit.fulfilled, (state, action) => {
         const updatedHabit = action.payload;
@@ -301,10 +314,13 @@ const habitsSlice = createSlice({
       const { habitId, completed, date } = action.payload;
       const habit = state.habits.find(h => h.id === habitId);
       if (habit) {
-        // Для каждой привычки добавляем флаг выполнения для конкретной даты
-        if (!habit.completedDates) habit.completedDates = {}; // Создаем объект для дат, если его нет
-        habit.completedDates[date] = completed;  // Сохраняем состояние выполнения для конкретной даты
+        if (!habit.completedDates) habit.completedDates = {};
+        habit.completedDates[date] = completed;
       }
+    })
+
+    .addCase(deleteAllHabits.fulfilled, (state) => {
+      state.habits = [];
     })
     
   },

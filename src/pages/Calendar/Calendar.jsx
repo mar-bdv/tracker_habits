@@ -27,7 +27,7 @@ export const Calendar = () => {
     const error = useSelector((state) => state.habits.error);
     const authStatus = useSelector((state) => state.auth.status);
 
-    const dateStr = getLocalDateString(selectedDate); // "YYYY-MM-DD"
+    const dateStr = selectedDate ? getLocalDateString(selectedDate) : "";
     const selectedMood = moodsByDate?.[dateStr] || null;
 
     const fullWeekdays = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
@@ -91,18 +91,42 @@ export const Calendar = () => {
     };
 
     // Функция для изменения месяца
+    // const changeMonth = (direction) => {
+    //     const newDate = new Date(currentDate);
+    //     newDate.setMonth(currentDate.getMonth() + direction);
+
+    //     // Ограничиваем переход месяцами в диапазоне от 3 месяцев назад до 3 месяцев вперед
+    //     if (newDate.getMonth() < currentDate.getMonth() - 3 || newDate.getMonth() > currentDate.getMonth() + 3) {
+    //     return;
+    //     }
+
+    //     setCurrentDate(newDate);
+    // };
+    
+
     const changeMonth = (direction) => {
         const newDate = new Date(currentDate);
         newDate.setMonth(currentDate.getMonth() + direction);
 
         // Ограничиваем переход месяцами в диапазоне от 3 месяцев назад до 3 месяцев вперед
         if (newDate.getMonth() < currentDate.getMonth() - 3 || newDate.getMonth() > currentDate.getMonth() + 3) {
-        return;
+            return;
         }
 
         setCurrentDate(newDate);
+
+        const today = new Date();
+        // Если месяц и год совпадают с текущими — выделяем сегодняшнюю дату
+        if (
+            newDate.getMonth() === today.getMonth() &&
+            newDate.getFullYear() === today.getFullYear()
+        ) {
+            setSelectedDate(today);
+        } else {
+            setSelectedDate(null); // сбрасываем выделение
+        }
     };
-    
+
     const daysInMonth = getDaysInMonth(currentMonth, currentYear);
     const firstDayOfMonth = getFirstDayOfMonth(currentMonth, currentYear);
 
@@ -212,7 +236,65 @@ export const Calendar = () => {
 
                         {/* Дни месяца */}
                         <div className={styles.days}>
-                            {calendarDays.map((day, index) => (
+                            {calendarDays.map((day, index) => {
+                                // Проверяем, выбран ли этот день
+                                let isSelected = false;
+                                if (selectedDate && day) {
+                                    isSelected =
+                                        selectedDate.getDate() === day &&
+                                        selectedDate.getMonth() === currentMonth &&
+                                        selectedDate.getFullYear() === currentYear;
+                                }
+                                return (
+                                    <div
+                                        key={index}
+                                        className={`${styles.day} ${isSelected ? styles.selected : ""}`}
+                                        onClick={() => handleDayClick(day)}
+                                    >
+                                        <p className={styles.one_day}>{day || ""}</p>
+                                        <div className={styles.one_mood}>
+                                            {day && (() => {
+                                                const dateKey = getLocalDateString(new Date(currentYear, currentMonth, day));
+                                                const moodValue = moodsByDate?.[dateKey]; // mood от 1 до 5
+                                                const MoodIcon = moodValue ? moodIcons[moodValue - 1] : null;
+
+                                                return (
+                                                    <>
+                                                        {MoodIcon && (
+                                                            <div className={styles.calendar_mood_icon}>
+                                                                <MoodIcon
+                                                                    width={window.innerWidth <= 420 ? 8 : 24}
+                                                                    height={window.innerWidth <= 420 ? 8 : 24}
+                                                                />
+                                                            </div>
+                                                        )}
+
+                                                        {habitCountsByDate[dateKey] > 0 && (
+                                                            <div className={styles.habit_count}>
+                                                                {habitCountsByDate[dateKey]}
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                );
+                                            })()}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        {/* <div className={styles.days}>
+                            {/* {calendarDays.map((day, index) => ( 
+
+                            {calendarDays.map((day, index) => {
+                                // Проверяем, выбран ли этот день
+                                let isSelected = false;
+                                if (selectedDate && day) {
+                                    isSelected =
+                                        selectedDate.getDate() === day &&
+                                        selectedDate.getMonth() === currentMonth &&
+                                        selectedDate.getFullYear() === currentYear;
+                                }
+                                return (
 
                                     <div 
                                         key={index} 
@@ -248,11 +330,12 @@ export const Calendar = () => {
                                         </div>
 
                                     </div>
+                                )}
                                     
                                 
 
                             ))}
-                        </div>
+                        </div> */}
 
                         
                     </div>

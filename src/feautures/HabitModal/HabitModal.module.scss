@@ -41,7 +41,7 @@
     padding: 20px;
 }
 
-/* Общие стили для инпутов, textarea и select */
+
 .modal_input,
 .modal_textarea,
 .modal_options {
@@ -66,7 +66,7 @@
     padding: 10px;
 }
 
-/* Стили для форм */
+
 .modal_labels {
     display: flex;
     flex-direction: column;
@@ -82,7 +82,7 @@
     
 }
 
-/* Общие стили для кнопок */
+
 .btn_save,
 .btn_cancel {
     cursor: pointer;
@@ -108,3 +108,14 @@
     margin-top: 20px;
 }
 
+@media (max-width: 420px) {
+    .modal {
+        width: 390px;
+        align-items: center;
+    }
+
+    .modal_labels {
+        max-width: 300px;
+        width: 100%;
+    }
+}
