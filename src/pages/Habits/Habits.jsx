@@ -37,6 +37,10 @@ const Habits = () => {
   const moodsByDate = useSelector((state) => state.moods.moodsByDate);
   const selectedMood = moodsByDate?.[dateStr] || null;
 
+  const { categories } = useSelector((state) => state.categories);
+  const userCategoriesCount = categories.filter(cat => !cat.is_system && cat.user_id === userId).length;
+
+
   useEffect(() => {
     if (userId) {
       dispatch(fetchHabits(userId));
@@ -54,6 +58,7 @@ const Habits = () => {
 
 
   const today = new Date().toISOString().slice(0,10);
+  
   const filteredByStatus = habits.filter(h => {
     const done = !!h.completedDates?.[today];
     if (filter === "active")    return !done;
@@ -69,6 +74,8 @@ const Habits = () => {
   const filteredHabits = filteredByCats.filter(habit =>
     habit.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+
 
   return (
     <div>
@@ -154,7 +161,12 @@ const Habits = () => {
 
             </div>
           </div>
-          {showModal && <AddCategoryModal onClose={() => setShowModal(false)} userId={userId} />}
+          {showModal && 
+            <AddCategoryModal 
+              onClose={() => setShowModal(false)} userId={userId}
+              userCategoriesCount={userCategoriesCount}
+            />
+          }
 
         </div>
 

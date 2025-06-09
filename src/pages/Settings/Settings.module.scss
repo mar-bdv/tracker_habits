@@ -13,7 +13,7 @@
 }
 
 .header {
-    color: $main;
+    color: var(--main);
     font-size: 45px;
     font-family: "Rubik Mono One", monospace;
     margin-top: 20px;
@@ -21,8 +21,8 @@
 }
 
 .settings_block {
-    background-color: $container;
-    border: 1px solid $border;
+    background-color: var(--container);
+    border: 1px solid var(--border);
     width: 800px;
     height: 500px;
     border-radius: 40px;
@@ -46,21 +46,20 @@
 .del_btn {
     background-color: transparent;
     border: none;
-    color: $warning;
+    color: var(--warning);
     cursor: pointer;
     font-size: 16px;
 }
 
-
-
 .input {
     background-color: transparent;
-    border: 1px solid $text;
+    border: 1px solid var(--text);
     border-radius: 10px;
     width: 265px;
     height: 22px;
     padding: 10px;
     font-size: 14px;
+    color: var(--text);
 }
 
 .input_block {
@@ -74,6 +73,7 @@
     border: none;
     cursor: pointer;
     font-size: 16px;
+    color: var(--text);
 }
 
 .img_btn {
@@ -93,9 +93,9 @@
     border: none;
     cursor: pointer;
     transition: background 0.3s ease;
-    color: $text;
+    color: var(--text);
     border-radius: 10px;
-
+    background: transparent;
 }
 
 .light_btn  {
@@ -103,8 +103,9 @@
 }
 
 .active {
-    background-color: $main;
+    background-color: var(--main);
     border-radius: 10px;
+    color: black;
 }
 
 .changeName_block {

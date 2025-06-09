@@ -15,7 +15,7 @@
 
 
 .modal {
-    background-color: $background;
+    background-color: var(--modal);
     border-radius: 30px;
     width: 504px;
     min-height: 254px;
@@ -26,7 +26,7 @@
 }
 
 .header {
-    background-color: $main; // или конкретный цвет, например: #FFA500
+    background-color: var(--main); // или конкретный цвет, например: #FFA500
     padding: 20px 20px 5px 20px;    
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
@@ -41,14 +41,13 @@
     font-weight: bold;
     text-align: center;
     margin: 0 0 10px;
-    color: $text;
+    color: #212121;
 }
 
 .input {
     max-width: 442px;
     width: 100%;
-
-    background-color: $container;
+    background-color: var(--modal_inputs);
     border-radius: 10px;
     font-size: 14px;
     border: none;
@@ -56,6 +55,7 @@
     padding: 5px 10px;
     height: 40px;
     margin-top: 0px;
+    color: var(--text);
 }
 
 .actions {
@@ -76,10 +76,11 @@
 
 .cancelBtn {
     background-color: transparent;
+    color: var(--text);
 }
 
 .addBtn {
-    background-color: $main;
+    background-color: var(--main);
     border-radius: 7px;
 }
 
@@ -99,7 +100,7 @@
 }
 
 .error {
-    color: $warning;
+    color: var(--warning);
     font-size: 14px;
     margin-top: 10px;
     margin-right: auto;

@@ -1,7 +1,7 @@
 @import '../../variables';
 
 body {
-    color: $text;
+    color: var(--text);
 }
 
 .img {
@@ -12,11 +12,11 @@ body {
 }
 
 .container {
-    background-color: $container;
+    background-color: var(--container);
     width: 204px;
     height: 100vh;
     margin-top: 20px;
-    border: 1px solid $border;
+    border: 1px solid var(--border);
     border-radius: 21px;
     margin-left: 30px;
     display: flex;
@@ -46,7 +46,7 @@ body {
     position: relative;
     display: inline-block;
     text-decoration: none;
-    color: $text;
+    color: var(--text);
 }
 
 .exit {
@@ -57,7 +57,7 @@ body {
     position: relative;
     display: inline-block;
     text-decoration: none;
-    color: $text;
+    color: var(--text);
 }
 
 .link_img {
@@ -134,7 +134,7 @@ body {
         display: block;
         width: 25px;
         height: 3px;
-        background: $main;
+        background: var(--main);
         margin: 4px 0;
         border-radius: 2px;
         transition: all 0.3s;
@@ -145,7 +145,7 @@ body {
         position: absolute;
         width: 25px;
         height: 3px;
-        background: $main;
+        background: var(--main);
         border-radius: 2px;
         transition: all 0.3s;
     }
@@ -168,7 +168,7 @@ body {
         left: 0;
         width: 100%;
         height: 100vh;
-        background: $container;
+        background: var(--container);
         z-index: 1002;
         padding-top: 80px;
         opacity: 0;

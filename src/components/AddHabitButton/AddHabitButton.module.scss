@@ -8,13 +8,13 @@
 }
 
 .input {
-    // background-color: $background;
-    // border: 1px solid $main;
+    // background-color: var(--background);
+    // border: 1px solid var(--main);
     // width: 430px;
     // height: 41px;
     // border-radius: 10px;
     // font-size: 16px;
-    background-color: rgb(242, 174, 102, 13%);
+    background-color: var(--add_habit_input);
     border: 1px solid #F2AE66;
     width: 430px;
     height: 41px;
@@ -36,12 +36,13 @@
     border: none;
     font-size: 20px;
     cursor: pointer;
-    color: $main;
+    color: var(--plus_btn);
 }
 
 .button {
-    background-color: $background;
-    border: 1px solid $main;
+    background-color: var(--add_habit_btn);
+    border: 1px solid var(--main);
+    color: var(--text);
     width: 430px;
     height: 41px;
     border-radius: 10px;

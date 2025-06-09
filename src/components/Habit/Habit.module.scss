@@ -7,8 +7,8 @@
     margin: 20px;
     max-width: 430px;
     width: 100%;
-    background-color: $background;
-    border: 1px solid $main;
+    background-color: var(--background);
+    border: 1px solid var(--main);
     border-radius: 15px;
     height: 85px;
     position: relative;
@@ -23,8 +23,8 @@
     align-items: flex-start;
     max-width: 430px;
     width: 100%;
-    background-color: $background;
-    border: 1px solid $main;
+    background-color: var(--background);
+    border: 1px solid var(--main);
     border-radius: 15px;
     height: 85px;
     position: relative;
@@ -50,9 +50,15 @@
 }
 
 .notes_habit {
-    color: $border;
+    color: var(--habit_notes);
     font-size: 14px;
     margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80%;
+    word-break: break-all;
+    padding-bottom: 5px;
 }
 
 .checkbox_habit {
@@ -72,15 +78,15 @@
     width: 17px;
     height: 17px;
     border-radius: 2px;
-    background-color: $input;
+    background-color: #D9D9D9;
     transition: background-color 0.3s, border-color 0.3s;
     margin-top: 10px;
     margin-left: 10px;
 }
 
-.checkbox_habit:checked + .customCheckbox {
-    background-color:  $input;
-}
+// .checkbox_habit:checked + .customCheckbox {
+//     background-color:  var(--input);
+// }
 
 .checkbox_habit:checked + .customCheckbox::after {
     content: '';
@@ -92,6 +98,10 @@
     border: solid black;
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
+}
+
+.habitCompleted {
+    border: 1px solid #BDBDBD;
 }
 
 .dotsButton {
@@ -111,7 +121,7 @@
 .habit {
     position: relative;
     padding: 10px 0px;
-    background-color: #fff;
+    background-color: var(--habit);
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -129,28 +139,38 @@
     position: absolute;
     right: 10px;
     top: 35px;
-    background-color: #fff;
+    background-color: var(--background);
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 150px;
     z-index: 10;
     padding: 5px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .option {
     background: none;
     border: none;
     padding: 10px;
-    width: 100%;
     text-align: left;
     font-size: 16px;
     cursor: pointer;
-    color: #333;
+    color: var(--text);
     transition: background-color 0.2s ease;
+
 }
 
-.option:hover {
-    background-color: #f1f1f1;
+.option_delete {
+    color: var(--warning);
+}
+
+.menuDivider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 0 0 0;
+    width: 100%;
 }
 
 
@@ -160,7 +180,8 @@
 
 .category_habit {
     font-size: 12px;
-    background-color: $input;
+    background-color: #D9D9D9;
+    color: #212121;
     padding: 3px 10px;
     border-radius: 5px;
     margin: 0 5px;
@@ -175,4 +196,5 @@
 .habit {
     min-height: 90px;
     margin-bottom: 8px;
+    max-width: 400px;
 }

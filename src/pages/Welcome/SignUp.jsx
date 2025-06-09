@@ -12,6 +12,8 @@ const SignUp = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [nickname, setNickname] = useState("");
+    const [passwordError, setPasswordError] = useState("");
+
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
@@ -22,12 +24,27 @@ const SignUp = () => {
             return;
         }
 
+        if (password.length < 6) {
+            setPasswordError("введите не менее 6 символов");
+            return;
+        }
+
         dispatch(signUpUser({ email, password, nickname }));
     };
 
     useEffect(() => {
         if (user) navigate("/home");
     }, [user, navigate]);
+
+    const handlePasswordChange = (e) => {
+        const value = e.target.value;
+        setPassword(value);
+        if (value.length > 0 && value.length < 6) {
+            setPasswordError("введите не менее 6 символов");
+        } else {
+            setPasswordError("");
+        }
+    };
 
     return (
         <div className={styles.container}>
@@ -66,7 +83,7 @@ const SignUp = () => {
                             className={styles.input}
                             placeholder="Придумайте пароль"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={handlePasswordChange}
                             required
                         />
                         <p className={styles.input_warning}>*минимум 6 символов</p>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./Settings.module.scss"
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAccount, updateAvatar, updateNickname } from "../../store/authSlice";
@@ -10,11 +10,14 @@ import DeleteAccountModal from "../../feautures/DeleteAccountModal/DeleteAccount
 
 
 export const Settings = () => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
     const [nicknameInput, setNicknameInput] = useState("");
     const [showResetModal, setShowResetModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const navigate = useNavigate();
+
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        return localStorage.getItem("theme") === "dark";
+    });
 
     const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.user);
@@ -30,6 +33,17 @@ export const Settings = () => {
             dispatch(updateNickname({ userId: user.id, newNickname: nicknameInput.trim() }));
         }
     };
+
+    useEffect(() => {
+        if (isDarkMode) {
+            document.body.classList.add("dark-theme");
+            localStorage.setItem("theme", "dark");
+        } else {
+            document.body.classList.remove("dark-theme");
+            localStorage.setItem("theme", "light");
+        }
+    }, [isDarkMode]);
+
 
     return (
         <div className={styles.container}>
@@ -82,12 +96,12 @@ export const Settings = () => {
                         >
                             Сбросить все привычки
                         </button>
-                        <button 
+                        {/* <button 
                             className={styles.del_btn}
                             onClick={() => setShowDeleteModal(true)}
                         >
                             Снести аккаунт
-                        </button>
+                        </button> */}
                     </div>
 
                     {showResetModal && (

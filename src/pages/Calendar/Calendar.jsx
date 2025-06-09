@@ -141,22 +141,71 @@ export const Calendar = () => {
     const completedCount = habits.filter(h =>  h.completedDates?.[dateStr]).length;
     const withDateCount  = habits.filter(h => h.deadline && !h.completedDates?.[dateStr]).length;
 
-    const filteredByStatus = habits.filter(habit => {
+    // const filteredByStatus = habits.filter(habit => {
+    //     const done = !!habit.completedDates?.[dateStr];
+    //     if (filter === "active")    return !done;
+    //     if (filter === "completed") return done;
+    //     if (filter === "withDate")  return habit.deadline && !done;
+    //     return true;
+    // });
+
+    
+    // const filteredByStatus = habits.filter(habit => {
+    //     const done = !!habit.completedDates?.[dateStr];
+    //     const createdAt = new Date(habit.created_at).setHours(0,0,0,0);
+    //     const deadline = habit.deadline ? new Date(habit.deadline).setHours(0,0,0,0) : Infinity;
+    //     const sel = selectedDate ? new Date(selectedDate).setHours(0,0,0,0) : null;
+
+    //     if (filter === "active")    return !done;
+    //     if (filter === "completed") return done;
+    //     if (filter === "withDate")  
+    //         return habit.deadline && !done && sel >= createdAt && sel <= deadline;
+    //     return true;
+    // });
+
+    // const filteredByCalendar = filteredByStatus.filter(habit => {
+    //     const sel = new Date(selectedDate).setHours(0,0,0,0);
+    //     const start = new Date(habit.created_at).setHours(0,0,0,0);
+    //     const end = habit.deadline 
+    //         ? new Date(habit.deadline).setHours(0,0,0,0) 
+    //         : Infinity;
+    //     return sel >= start && sel <= end;
+    // });
+
+    // const habitsForSelectedDate = habits.filter(habit => {
+    //     const sel = selectedDate ? new Date(selectedDate).setHours(0,0,0,0) : null;
+    //     const createdAt = new Date(habit.created_at).setHours(0,0,0,0);
+    //     // Если нет дедлайна — привычка бессрочная, показываем всегда
+    //     if (!habit.deadline) return sel >= createdAt;
+    //     const deadline = new Date(habit.deadline).setHours(0,0,0,0);
+    //     return sel >= createdAt && sel <= deadline;
+    // });
+
+    // const filteredHabits = habitsForSelectedDate.filter(habit => {
+    //     const done = !!habit.completedDates?.[dateStr];
+    //     if (filter === "active")    return !done;
+    //     if (filter === "completed") return done;
+    //     if (filter === "withDate")  return !!habit.deadline && !done;
+    //     return true;
+    // });
+
+    const habitsForSelectedDate = habits.filter(habit => {
+        const sel = selectedDate ? new Date(selectedDate).setHours(0,0,0,0) : null;
+        const createdAt = new Date(habit.created_at).setHours(0,0,0,0);
+        // Если нет дедлайна — привычка бессрочная, показываем всегда
+        if (!habit.deadline) return sel >= createdAt;
+        const deadline = new Date(habit.deadline).setHours(0,0,0,0);
+        return sel >= createdAt && sel <= deadline;
+    });
+
+    const filteredHabits = habitsForSelectedDate.filter(habit => {
         const done = !!habit.completedDates?.[dateStr];
         if (filter === "active")    return !done;
         if (filter === "completed") return done;
-        if (filter === "withDate")  return habit.deadline && !done;
+        if (filter === "withDate")  return !!habit.deadline && !done;
         return true;
     });
 
-    const filteredByCalendar = filteredByStatus.filter(habit => {
-        const sel = new Date(selectedDate).setHours(0,0,0,0);
-        const start = new Date(habit.created_at).setHours(0,0,0,0);
-        const end = habit.deadline 
-            ? new Date(habit.deadline).setHours(0,0,0,0) 
-            : Infinity;
-        return sel >= start && sel <= end;
-    });
 
     const habitCountsByDate = useMemo(() => {
         const counts = {};
@@ -282,62 +331,7 @@ export const Calendar = () => {
                                 );
                             })}
                         </div>
-                        {/* <div className={styles.days}>
-                            {/* {calendarDays.map((day, index) => ( 
 
-                            {calendarDays.map((day, index) => {
-                                // Проверяем, выбран ли этот день
-                                let isSelected = false;
-                                if (selectedDate && day) {
-                                    isSelected =
-                                        selectedDate.getDate() === day &&
-                                        selectedDate.getMonth() === currentMonth &&
-                                        selectedDate.getFullYear() === currentYear;
-                                }
-                                return (
-
-                                    <div 
-                                        key={index} 
-                                        className={`${styles.day} ${selectedDate?.getDate() === day ? styles.selected : ""}`} 
-                                        onClick={() => handleDayClick(day)}
-                                    >
-                                        <p className={styles.one_day}>{day || ""}</p>
-                                        <div className={styles.one_mood}>  
-                                            {day && (() => {
-                                                const dateKey = getLocalDateString(new Date(currentYear, currentMonth, day));
-                                                const moodValue = moodsByDate?.[dateKey]; // mood от 1 до 5
-                                                const MoodIcon = moodValue ? moodIcons[moodValue - 1] : null;
-
-                                                return (
-                                                    <>
-                                                        {MoodIcon && (
-                                                            <div className={styles.calendar_mood_icon}>
-                                                                <MoodIcon
-                                                                    width={window.innerWidth <= 420 ? 8 : 24}
-                                                                    height={window.innerWidth <= 420 ? 8 : 24}
-                                                                />
-                                                            </div>
-                                                        )}
-
-                                                        {habitCountsByDate[dateKey] > 0 && (
-                                                            <div className={styles.habit_count}>
-                                                                {habitCountsByDate[dateKey]}
-                                                            </div>
-                                                        )}
-                                                    </>
-                                                );
-                                            })()}
-                                        </div>
-
-                                    </div>
-                                )}
-                                    
-                                
-
-                            ))}
-                        </div> */}
-
-                        
                     </div>
 
                     <div>
@@ -367,12 +361,19 @@ export const Calendar = () => {
                         </div>
                         <div className={styles.habits}>
 
-                            {filteredByCalendar.length > 0 ? (
-                                filteredByCalendar.map((habit) => (
+                            {filteredHabits.length > 0 ? (
+                                filteredHabits.map((habit) => (
                                     <Habit 
                                         key={habit.id} 
                                         habit={habit} 
-                                        style={{ margin: "10px 0px", width: "95%" }} 
+                                        style={{ 
+                                            margin: "10px 0px",
+                                            width: "350px",
+                                            // whiteSpace: "nowrap",
+                                            // overflow: "hidden",
+                                            // textOverflow: "ellipsis",
+                                            // wordBreak: "break-all",
+                                        }} 
                                         selectedDate={getLocalDateString(selectedDate)} // строка "YYYY-MM-DD"
                                     />
                                 ))
@@ -385,7 +386,7 @@ export const Calendar = () => {
                         <div className={styles.moods_block}>
                             <p className={styles.mood_text}>Какое у вас сегодня настроение?</p>
                             <Moods 
-                                style={{ width: "35px", margin: "10px", gap: "0px" }}  
+                                style={{ width: "35px", margin: "10px", gap: "0px", }}
                                 selectedMood={selectedMood} 
                                 selectedDate={selectedDate} 
                                 userId={userId}

@@ -14,7 +14,7 @@
 }
 
 .modal {
-    background: $background;
+    background: var(--modal);
     border-radius: 30px;
     width: 500px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -27,7 +27,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $main;
+    background-color: var(--main);
     width: 100%;
     height: 60px;
     border-top-left-radius: 30px;
@@ -39,6 +39,7 @@
     font-weight: bold;
     margin: 0;
     padding: 20px;
+    color: #212121;
 }
 
 
@@ -47,12 +48,13 @@
 .modal_options {
     width: 100%;
     max-width: 430px;
-    background-color: $container;
+    background-color: var(--modal_inputs);
     border-radius: 10px;
     font-size: 14px;
     border: none;
     font-family: "Lato", sans-serif;
     padding: 5px 10px;
+    color: var(--text);
 }
 
 .modal_input,
@@ -94,10 +96,11 @@
 
 .btn_cancel {
     background-color: transparent;
+    color: var(--text);
 }
 
 .btn_save {
-    background-color: $main;
+    background-color: var(--main);
     border-radius: 7px;
 }
 

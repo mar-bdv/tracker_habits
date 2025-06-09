@@ -11,14 +11,14 @@
 .progressBar {
     width: 400px;
     height: 15px;
-    background-color: $border;
+    background-color: var(--border);
     border-radius: 10px;
     overflow: hidden;
 }
 
 .progress {
     height: 100%;
-    background-color: $main;
+    background-color: var(--main);
     transition: width 0.3s ease-in-out;
 }
 

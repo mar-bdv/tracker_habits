@@ -2,12 +2,13 @@
 
 
 .home_container {
-    background-color: $container;
-    border: 1px solid $border;
+    background-color: var(--container);
+    border: 1px solid var(--border);
     border-radius: 20px;
     padding: 20px;
     margin-top: 20px;
     margin-left: 80px;
+    max-width: 1200px;
 }
 
 .container {
@@ -41,7 +42,7 @@
 }
 
 .heading_span {
-    color: $main;
+    color: var(--main);
 }
 
 .two_blocks {
@@ -61,8 +62,8 @@
 }
 
 .habits_list {
-    background-color: $container;
-    border: 1px solid $border;
+    background-color: var(--container);
+    border: 1px solid var(--border);
     border-radius: 16px;
     max-width: 493px;
     width: 100%;
@@ -122,8 +123,8 @@
 }
 
 .streak_container {
-    background-color: $container;
-    border: 1px solid $border;
+    background-color: var(--container);
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 10px;
     width: 448px;
@@ -169,8 +170,8 @@
 
         
     .streak_container {
-        background-color: $container;
-        border: 1px solid $border;
+        background-color: var(--container);
+        border: 1px solid var(--border);
         border-radius: 16px;
         padding: 10px;
         width: 326px;

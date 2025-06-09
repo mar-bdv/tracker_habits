@@ -72,6 +72,7 @@ const Categories = ({ onFilterChange }) => {
             <span
               className={`${styles.category_name}`}
               onClick={() => toggleSelect(cat.id)}
+              title="Выбрать категорию"
             >
               {cat.name}
             </span>

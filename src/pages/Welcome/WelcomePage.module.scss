@@ -1,17 +1,17 @@
 @import '../../variables';
 
 body {
-    background-color: $background;
+    background-color: var(--background);
     font-family: "Lato", sans-serif;
-    color: $text;
+    color: var(--text);
     @media (max-width: 420px) {
         margin: 0px;
     }
 }
 
 ::selection {
-    background-color: #4A4A4A;
-    color: #E0E0E0;
+    background-color: #343434;
+    color: var(--main);
 }
 
 
@@ -30,7 +30,7 @@ body {
 
 
 .heading {
-    color: $main;
+    color: var(--main);
     font-family: "Rubik Mono One", monospace;
     font-weight: 300;
     font-size: 45px;
@@ -40,7 +40,7 @@ body {
 
 .start_text {
     font-family: "Lato", sans-serif;
-    color: $main;
+    color: var(--main);
     font-size: 30px;
     font-weight: bold;
     position: absolute;
@@ -60,8 +60,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid $border;
-    background-color: $container;
+    border: 1px solid var(--border);
+    background-color: var(--container);
     border-radius: 39px;
     max-width: 1071px;
     height: 722px;
@@ -79,13 +79,13 @@ body {
 }
 
 .btn_link {
-    background-color: $main;
+    background-color: var(--main);
     font-size: 20px;
     text-decoration: none;
     border-radius: 15px;
     padding: 10px 30px;
     font-family: "Rubik Mono One", monospace;
-    color: $text;
+    color: #212121;
     border: none;
     width: 402px;
     cursor: pointer;
@@ -96,8 +96,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px solid $border;
-    background-color: $container;
+    border: 1px solid var(--border);
+    background-color: var(--container);
     border-radius: 39px;
     max-width: 1071px;
     height: 722px;
@@ -116,16 +116,17 @@ body {
 .input {
     width: 326px;
     border-radius: 15px;
-    border: 1px solid $border;
+    border: 1px solid var(--border);
     padding: 15px;
     font-size: 14px;
-    background-color: $container;
+    background-color: var(--container);
+    color: var(--text);
 }
 
 .start_text_signup {
     top: 30px;
     font-family: "Lato", sans-serif;
-    color: $main;
+    color: var(--main);
     font-size: 30px;
     font-weight: bold;
     position: absolute;
@@ -141,7 +142,7 @@ body {
 
 .link {
     text-decoration: none;
-    color: $text;
+    color: var(--text);
     font-weight: bold;
 }
 
@@ -171,7 +172,7 @@ body {
 }
 
 .input_warning {
-    color: $text;
+    color: var(--text);
     font-size: 12px;
     margin-left: 10px;
 }
@@ -181,7 +182,7 @@ body {
 }
 
 .error {
-    color: $warning;
+    color: var(--warning);
     margin: 3px 0px;
 }
 

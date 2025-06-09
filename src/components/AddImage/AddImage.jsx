@@ -3,6 +3,7 @@ import styles from './AddImage.module.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAvatar, updateAvatar } from '../../store/authSlice';
 import { AnimatePresence, motion } from 'framer-motion'
+import defaultAvatar from '../../images/default_avatar.png'
 
 const AddImage = () => {
     const dispatch = useDispatch();
@@ -47,31 +48,31 @@ const AddImage = () => {
         <div className={styles.img_block}>
             <img
                 className={styles.img}
-                src={user.avatar_url || '/default-avatar.png'}
+                src={user.avatar_url || defaultAvatar}
                 alt="Аватар"
             />
 
             <AnimatePresence mode="wait">
             {!isEditing ? (
                 <motion.p
-                key="text"
-                className={styles.updateText}
-                onClick={() => setIsEditing(true)}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
+                    key="text"
+                    className={styles.updateText}
+                    onClick={() => setIsEditing(true)}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
                 >
                 Обновить изображение
                 </motion.p>
             ) : (
                 <motion.div
-                key="box"
-                className={styles.inputGroup}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3 }}
+                    key="box"
+                    className={styles.inputGroup}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
                 >
                 <input
                     type="text"

@@ -11,7 +11,7 @@
 }
 
 .modal {
-    background: $background;
+    background: var(--background);
     border-radius: 30px;
     padding: 24px 20px;
     max-width: 480px;
@@ -36,7 +36,7 @@
 
 .confirm {
     width: 133px;
-    color: $text;
+    color: var(--text);
     border: none;
     border-radius: 6px;
     padding: 8px 16px;
@@ -44,10 +44,10 @@
 }
 
 .cancel {
-    background: $main;
+    background: var(--main);
     width: 133px;
 
-    color: $text;
+    color: var(--text);
     border: none;
     border-radius: 6px;
     padding: 8px 16px;

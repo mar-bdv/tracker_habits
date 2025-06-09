@@ -4,12 +4,32 @@ import styles from "./AddCategoryModal.module.scss";
 import { addCategory } from "../../store/categoriesSlice";
 import { motion } from "motion/react"
 
-const AddCategoryModal = ({ onClose, userId }) => {
+const AddCategoryModal = ({ onClose, userId, userCategoriesCount }) => {
     const dispatch = useDispatch();
     const [name, setName] = useState("");
     const [error, setError] = useState("");
+    
+    const MAX_CATEGORIES = 5;
 
+
+    // const handleAdd = () => {
+    //     if (!name.trim()) return;
+
+    //     if (name.trim().length > 20) {
+    //         setError("Название не должно превышать 20 символов");
+    //         return;
+    //     }
+
+    //     dispatch(addCategory({ name: name.trim(), userId }));
+    //     onClose();
+    // };
+
+    
     const handleAdd = () => {
+        if (userCategoriesCount >= MAX_CATEGORIES) {
+            setError("Нельзя добавить больше 5 категорий");
+            return;
+        }
         if (!name.trim()) return;
 
         if (name.trim().length > 20) {
@@ -21,12 +41,25 @@ const AddCategoryModal = ({ onClose, userId }) => {
         onClose();
     };
 
+    // const handleChange = (e) => {
+    //     const value = e.target.value;
+    //     setName(value);
+
+    //     if (value.length > 20) {
+    //         setError("Название не должно превышать 20 символов");
+    //     } else {
+    //         setError("");
+    //     }
+    // };
+
     const handleChange = (e) => {
         const value = e.target.value;
         setName(value);
 
         if (value.length > 20) {
             setError("Название не должно превышать 20 символов");
+        } else if (userCategoriesCount >= MAX_CATEGORIES) {
+            setError("Нельзя добавить больше 5 категорий");
         } else {
             setError("");
         }

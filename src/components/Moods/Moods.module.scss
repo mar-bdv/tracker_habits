@@ -32,7 +32,7 @@
 }
 
 .moods {
-    display: flex;;
+    display: flex;
     gap: 20px;
     @media (max-width: 420px) {
         justify-content: space-around;

@@ -47,7 +47,12 @@ const HabitModal = ({ isVisible, onClose, onSave, title, setTitle, notes, setNot
                     </label>
                     <label className={styles.label_text}>
                         Заметки:
-                        <textarea className={styles.modal_textarea} value={notes} onChange={(e) => setNotes(e.target.value)} />
+                        <textarea 
+                            className={styles.modal_textarea} 
+                            value={notes} 
+                            onChange={(e) => setNotes(e.target.value)} 
+                            maxLength={150}
+                        />
                     </label>
                     <label className={styles.label_text}>
                         Категория:
@@ -67,7 +72,12 @@ const HabitModal = ({ isVisible, onClose, onSave, title, setTitle, notes, setNot
                     </label>
                     <label className={styles.label_text}>
                         Выполнить до:
-                        <input className={styles.modal_input} type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
+                        <input 
+                            className={styles.modal_input} 
+                            type="date" value={deadline} 
+                            onChange={(e) => setDeadline(e.target.value)} 
+                            min={new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0]}
+                        />
                     </label>
                     <div className={styles.modalButtons}>
                         <button onClick={onClose} className={styles.btn_cancel}>Отмена</button>

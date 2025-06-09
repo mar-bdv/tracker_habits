@@ -3,7 +3,7 @@
 .header_block {
     font-size: 35px;    
     font-family: "Rubik Mono One", monospace;
-    color: $main;
+    color: var(--main);
     font-weight: normal;
     display: flex;
     justify-content: center;
@@ -23,8 +23,8 @@
 
 .habits_block {
     min-height: 830px;
-    background-color: $container;
-    border: 1px solid $border;
+    background-color: var(--container);
+    border: 1px solid var(--border);
     border-radius: 20px;
     margin-left: 70px;
     display: flex;
@@ -40,8 +40,8 @@
 }
 
 .addhabit_container {
-    background-color: $container;
-    border: 1px solid $border;
+    background-color: var(--container);
+    border: 1px solid var(--border);
     border-radius: 16px;
     padding: 10px;
 }
@@ -76,8 +76,8 @@
 
 .filter_button {
     background-color: transparent;
-    border: 1px solid $main;
-    color: $main;
+    border: 1px solid var(--main);
+    color: var(--main);
     border-radius: 5px;
     width: 223px;
     height: 30px;
@@ -94,8 +94,8 @@
 }
 
 .moods_container {
-    background-color: $container;
-    border: 1px solid $border;
+    background-color: var(--container);
+    border: 1px solid var(--border);
     border-radius: 16px;
     margin-top: 20px;
     padding: 20px;

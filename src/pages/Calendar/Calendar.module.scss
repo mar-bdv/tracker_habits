@@ -3,7 +3,7 @@
 .heading_block {
     font-size: 35px;    
     font-family: "Rubik Mono One", monospace;
-    color: $main;
+    color: var(--main);
     font-weight: normal;
     display: flex;
     justify-content: center;
@@ -52,23 +52,18 @@
     }
 
     .day {
-        width: 90px;
+        width: 80px;
+        height: 80px;
         aspect-ratio: 1 / 1;
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid $border;
+        border: 1px solid var(--border);
         border-radius: 16px;
         background-color: transparent;
         cursor: pointer;
         transition: background 0.2s;
 
-
-
-    
-        &:hover {
-            background-color: #ddd;
-        }
     
         &.empty {
             background-color: transparent;
@@ -78,6 +73,7 @@
         font-family: "Rubik Mono One", monospace;
         font-size: 30px;
         margin-top: auto;
+        color: var(--text);
     }
     .one_mood {
         margin-top: auto;
@@ -85,7 +81,7 @@
 }
 
 .monthName {
-    color: $main;
+    color: var(--main);
     font-family: "Rubik Mono One", monospace;
     font-size: 35px;
 }
@@ -104,8 +100,8 @@
 }
 
 .container_calendar {
-    background-color: $container;
-    border: 1px solid $border;
+    background-color: var(--container);
+    border: 1px solid var(--border);
     border-radius: 20px;
     display: flex;
     max-width: 1200px;
@@ -117,7 +113,7 @@
 }
 
 .right_block {
-    border: 1px solid $border;
+    border: 1px solid var(--border);
     border-radius: 16px;
     margin-left: 40px;
     height: 770px;
@@ -125,21 +121,21 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 380px;
+    width: 420px;
     // margin-left: 80px;
     padding: 10px;
 }
 
 .date_block {
-    width: 360px;
+    width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.calendar_block {
-    margin-left: 20px;
-}
+// .calendar_block {
+//     margin-left: 20px;
+// }
 
 .right_date {
     font-size: 20px;
@@ -154,7 +150,7 @@
 }
 
 .habits {
-    width: 350px;
+    // width: 350px;
     height: 500px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -192,7 +188,7 @@
 }
 
 .selected {
-    border: 2px solid $main !important;
+    border: 2px solid var(--main) !important;
 }
 
 
@@ -229,7 +225,7 @@
     position: absolute;
     bottom: 6px;
     left: 6px;
-    background-color: $border;
+    background-color: var(--border);
     font-size: 12px;
     border-radius: 50%;
     width: 20px;
@@ -244,7 +240,7 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    background-color: $main;
+    background-color: var(--main);
     font-weight: bold;
     border-radius: 50%;
     width: 24px;
@@ -252,6 +248,7 @@
     margin-left: 8px;
     font-size: 14px;
     line-height: 1;
+    color: #1E1E1E;
 }
 
 @media (max-width: 460px) {
@@ -344,9 +341,13 @@
         height: 10px;
         display: inline-flex;
         border-radius: 50%;
-        background-color: $main;
-
+        background-color: var(--main);
     }
+
+    .date_block {
+        width: 360px;
+    }
+
 }
 
 .weekdays div {
