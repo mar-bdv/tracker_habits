@@ -3,7 +3,6 @@ import { useState } from "react";
 import styles from "./AddHabitButton.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { addHabit } from "../../store/habitsSlice"
-import { motion } from "motion/react"
 
 
 const AddHabitButton = () => {
@@ -14,7 +13,7 @@ const AddHabitButton = () => {
 
     const handleAddHabit = () => {
         if (!user) {
-            console.error("Ошибка: user отсутствует!"); 
+            console.error("Ошибка: user отсутствует!");
             alert("Вы не авторизованы!");
             return;
         }

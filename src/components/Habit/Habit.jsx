@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import styles from "./Habit.module.scss";
 import threeDotes from '../../images/three_dotes.png'
 import HabitModal from "../../feautures/HabitModal/HabitModal";
-import { addHabit } from "../../habitsThunks";
 import { deleteHabit, toggleHabit, toggleHabitForDate, updateHabit, updateHabitImmediate } from "../../store/habitsSlice";
 import { getLocalDateString } from "../../utils/date";
 import { fetchCategories } from "../../store/categoriesSlice";
@@ -97,7 +96,6 @@ const Habit = ({ style, habit, selectedDate }) => {
       dispatch(updateHabit(updatedHabitData))
         .then((action) => {
           if (updateHabit.fulfilled.match(action) && action.payload) {
-            // теперь payload — это сразу объект обновлённой привычки
             dispatch(updateHabitImmediate(action.payload));
           }
         })
@@ -190,4 +188,3 @@ const Habit = ({ style, habit, selectedDate }) => {
   };
   
 export default Habit;
-  

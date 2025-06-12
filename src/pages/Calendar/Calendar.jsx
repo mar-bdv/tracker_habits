@@ -44,8 +44,8 @@ export const Calendar = () => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    const currentMonth = currentDate.getMonth(); // Месяц (0-11)
-    const currentYear = currentDate.getFullYear(); // Год
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
 
 
     const handleDayClick = (day) => {
@@ -90,25 +90,11 @@ export const Calendar = () => {
         return months[month];
     };
 
-    // Функция для изменения месяца
-    // const changeMonth = (direction) => {
-    //     const newDate = new Date(currentDate);
-    //     newDate.setMonth(currentDate.getMonth() + direction);
-
-    //     // Ограничиваем переход месяцами в диапазоне от 3 месяцев назад до 3 месяцев вперед
-    //     if (newDate.getMonth() < currentDate.getMonth() - 3 || newDate.getMonth() > currentDate.getMonth() + 3) {
-    //     return;
-    //     }
-
-    //     setCurrentDate(newDate);
-    // };
-    
 
     const changeMonth = (direction) => {
         const newDate = new Date(currentDate);
         newDate.setMonth(currentDate.getMonth() + direction);
 
-        // Ограничиваем переход месяцами в диапазоне от 3 месяцев назад до 3 месяцев вперед
         if (newDate.getMonth() < currentDate.getMonth() - 3 || newDate.getMonth() > currentDate.getMonth() + 3) {
             return;
         }
@@ -116,14 +102,13 @@ export const Calendar = () => {
         setCurrentDate(newDate);
 
         const today = new Date();
-        // Если месяц и год совпадают с текущими — выделяем сегодняшнюю дату
         if (
             newDate.getMonth() === today.getMonth() &&
             newDate.getFullYear() === today.getFullYear()
         ) {
             setSelectedDate(today);
         } else {
-            setSelectedDate(null); // сбрасываем выделение
+            setSelectedDate(null);
         }
     };
 
@@ -141,58 +126,9 @@ export const Calendar = () => {
     const completedCount = habits.filter(h =>  h.completedDates?.[dateStr]).length;
     const withDateCount  = habits.filter(h => h.deadline && !h.completedDates?.[dateStr]).length;
 
-    // const filteredByStatus = habits.filter(habit => {
-    //     const done = !!habit.completedDates?.[dateStr];
-    //     if (filter === "active")    return !done;
-    //     if (filter === "completed") return done;
-    //     if (filter === "withDate")  return habit.deadline && !done;
-    //     return true;
-    // });
-
-    
-    // const filteredByStatus = habits.filter(habit => {
-    //     const done = !!habit.completedDates?.[dateStr];
-    //     const createdAt = new Date(habit.created_at).setHours(0,0,0,0);
-    //     const deadline = habit.deadline ? new Date(habit.deadline).setHours(0,0,0,0) : Infinity;
-    //     const sel = selectedDate ? new Date(selectedDate).setHours(0,0,0,0) : null;
-
-    //     if (filter === "active")    return !done;
-    //     if (filter === "completed") return done;
-    //     if (filter === "withDate")  
-    //         return habit.deadline && !done && sel >= createdAt && sel <= deadline;
-    //     return true;
-    // });
-
-    // const filteredByCalendar = filteredByStatus.filter(habit => {
-    //     const sel = new Date(selectedDate).setHours(0,0,0,0);
-    //     const start = new Date(habit.created_at).setHours(0,0,0,0);
-    //     const end = habit.deadline 
-    //         ? new Date(habit.deadline).setHours(0,0,0,0) 
-    //         : Infinity;
-    //     return sel >= start && sel <= end;
-    // });
-
-    // const habitsForSelectedDate = habits.filter(habit => {
-    //     const sel = selectedDate ? new Date(selectedDate).setHours(0,0,0,0) : null;
-    //     const createdAt = new Date(habit.created_at).setHours(0,0,0,0);
-    //     // Если нет дедлайна — привычка бессрочная, показываем всегда
-    //     if (!habit.deadline) return sel >= createdAt;
-    //     const deadline = new Date(habit.deadline).setHours(0,0,0,0);
-    //     return sel >= createdAt && sel <= deadline;
-    // });
-
-    // const filteredHabits = habitsForSelectedDate.filter(habit => {
-    //     const done = !!habit.completedDates?.[dateStr];
-    //     if (filter === "active")    return !done;
-    //     if (filter === "completed") return done;
-    //     if (filter === "withDate")  return !!habit.deadline && !done;
-    //     return true;
-    // });
-
     const habitsForSelectedDate = habits.filter(habit => {
         const sel = selectedDate ? new Date(selectedDate).setHours(0,0,0,0) : null;
         const createdAt = new Date(habit.created_at).setHours(0,0,0,0);
-        // Если нет дедлайна — привычка бессрочная, показываем всегда
         if (!habit.deadline) return sel >= createdAt;
         const deadline = new Date(habit.deadline).setHours(0,0,0,0);
         return sel >= createdAt && sel <= deadline;
@@ -270,7 +206,6 @@ export const Calendar = () => {
                     </div>
 
                     <div className={styles.calendar}>
-                        {/* Дни недели */}
                         <div className={styles.weekdays}>
                             {(isMobile ? shortWeekdays : fullWeekdays).map((day, index) => (
                                 <div 
@@ -278,15 +213,12 @@ export const Calendar = () => {
                                     data-full={fullWeekdays[index]}
                                     data-short={shortWeekdays[index]}
                                 >
-                                    {/* {day} */}
                                 </div>
                             ))}
                         </div>
 
-                        {/* Дни месяца */}
                         <div className={styles.days}>
                             {calendarDays.map((day, index) => {
-                                // Проверяем, выбран ли этот день
                                 let isSelected = false;
                                 if (selectedDate && day) {
                                     isSelected =
@@ -304,7 +236,7 @@ export const Calendar = () => {
                                         <div className={styles.one_mood}>
                                             {day && (() => {
                                                 const dateKey = getLocalDateString(new Date(currentYear, currentMonth, day));
-                                                const moodValue = moodsByDate?.[dateKey]; // mood от 1 до 5
+                                                const moodValue = moodsByDate?.[dateKey];
                                                 const MoodIcon = moodValue ? moodIcons[moodValue - 1] : null;
 
                                                 return (
@@ -369,12 +301,8 @@ export const Calendar = () => {
                                         style={{ 
                                             margin: "10px 0px",
                                             width: "350px",
-                                            // whiteSpace: "nowrap",
-                                            // overflow: "hidden",
-                                            // textOverflow: "ellipsis",
-                                            // wordBreak: "break-all",
                                         }} 
-                                        selectedDate={getLocalDateString(selectedDate)} // строка "YYYY-MM-DD"
+                                        selectedDate={getLocalDateString(selectedDate)}
                                     />
                                 ))
                             ) : (

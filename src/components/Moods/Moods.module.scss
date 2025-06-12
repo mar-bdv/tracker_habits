@@ -3,7 +3,7 @@
     width: 68px;
     height: 68px;
     cursor: pointer;
-    color: gray; // вместо fill
+    color: gray;
 
     &.selected {
         color: #ffc400;
@@ -18,7 +18,7 @@
     cursor: pointer;
 
     &:hover {
-        background: #f2ae6671; // чуть прозрачный при наведении
+        background: #f2ae6671;
     }
     }
 

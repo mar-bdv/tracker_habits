@@ -2,47 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../supabaseClient";
 
 
-// export const signUpUser = createAsyncThunk(
-//   'auth/signUpUser',
-//   async ({ email, password, nickname }, thunkAPI) => {
-//     const { data, error } = await supabase.auth.signUp({
-//       email,
-//       password,
-//       options: {
-//         data: { nickname },
-//       },
-//     });
-
-//     if (error) {
-//       // Показываем общую понятную ошибку, если ошибка от supabase выглядит "технически"
-//       const friendlyMessage = error.message.toLowerCase().includes('invalid') ||
-//                               error.message.toLowerCase().includes('character') ||
-//                               error.message.toLowerCase().includes('format')
-//         ? 'Произошла ошибка! Попробуйте ещё раз.'
-//         : error.message;
-
-//       return thunkAPI.rejectWithValue(friendlyMessage);
-//     }
-
-//     const user = data.user;
-
-//     const { error: userError } = await supabase
-//       .from('users')
-//       .insert([{ id: user.id, email, nickname }]);
-
-//     if (userError) {
-//       return thunkAPI.rejectWithValue('Произошла ошибка при создании пользователя. Попробуйте ещё раз.');
-//     }
-
-//     return {
-//       id: user.id,
-//       email: user.email,
-//       nickname: user.user_metadata?.nickname || '',
-//     };
-//   }
-  
-// );
-
 export const signUpUser = createAsyncThunk(
   'auth/signUpUser',
   async ({ email, password, nickname }, thunkAPI) => {
@@ -89,16 +48,12 @@ export const signUpUser = createAsyncThunk(
 export const deleteAccount = createAsyncThunk(
   "auth/deleteAccount",
   async (userId, thunkAPI) => {
-    // Удаляем все привычки пользователя
     await supabase.from("habits").delete().eq("user_id", userId);
 
-    // Удаляем пользователя из таблицы users
     await supabase.from("users").delete().eq("id", userId);
 
-    // Выходим из аккаунта
     await supabase.auth.signOut();
 
-    // Очищаем пользователя в Redux
     return userId;
   }
 );
@@ -114,7 +69,6 @@ export const signInUser = createAsyncThunk(
     });
 
     if (error) {
-      // Преобразуем техническое сообщение в понятное
       const errorMessage =
         error.message === "Invalid login credentials"
           ? "Неверный пароль или email"
@@ -132,7 +86,6 @@ export const signInUser = createAsyncThunk(
   }
 );
 
-// Выход
 export const signOutUser = createAsyncThunk("auth/signOutUser", async () => {
   await supabase.auth.signOut();
   return null;
@@ -180,7 +133,7 @@ export const updateAvatar = createAsyncThunk(
         throw error;
       }
 
-      return avatarUrl; // вернём для обновления в state
+      return avatarUrl;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -192,7 +145,7 @@ export const deleteAvatar = createAsyncThunk(
   'auth/deleteAvatar',
   async (userId, { rejectWithValue }) => {
     try {
-      const DEFAULT_AVATAR_URL = 'https://i.ibb.co/3y45FgtQ/img.png'; // или внешний URL
+      const DEFAULT_AVATAR_URL = 'https://i.ibb.co/3y45FgtQ/img.png';
 
       const { error } = await supabase
         .from('users')
@@ -236,9 +189,8 @@ export const createDemoUser = createAsyncThunk(
     const email = `demo_${Date.now()}@demo.app`;
     const password = generateRandomString(12);
     const nickname = `User${Math.floor(Math.random() * 10000)}`;
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(); // +24 часа
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
 
-    // 1. Регистрируем пользователя
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -255,7 +207,6 @@ export const createDemoUser = createAsyncThunk(
 
     const user = data.user;
 
-    // 2. Добавляем в таблицу `users`
     const { error: insertError } = await supabase.from('users').insert([
       {
         id: user.id,
@@ -272,7 +223,7 @@ export const createDemoUser = createAsyncThunk(
       );
     }
 
-    // 3. Сразу входим под ним
+
     const { data: signInData, error: signInError } =
       await supabase.auth.signInWithPassword({
         email,
@@ -295,7 +246,6 @@ export const createDemoUser = createAsyncThunk(
 
 
 
-// Слайс авторизации
 const authSlice = createSlice({
   name: "auth",
   initialState: {

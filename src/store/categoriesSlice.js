@@ -6,7 +6,6 @@ import { supabase } from "../supabaseClient";
 export const fetchCategories = createAsyncThunk(
     "categories/fetchCategories",
     async (userId, thunkAPI) => {
-      // 1️⃣ Получаем id скрытых пользователем категорий
         const { data: hidden, error: hiddenError } = await supabase
             .from("user_hidden_categories")
             .select("category_id")
@@ -16,13 +15,11 @@ export const fetchCategories = createAsyncThunk(
     
         const hiddenIds = hidden.map((item) => item.category_id);
     
-        // 2️⃣ Получаем категории (системные + пользовательские), исключая скрытые
         let query = supabase
             .from("categories")
             .select("*")
             .or(`user_id.eq.${userId},is_system.eq.true`);
     
-        // Supabase не принимает пустой массив в .not(..., 'in', [])
         if (hiddenIds.length > 0) {
             query = query.not("id", "in", `(${hiddenIds.join(",")})`);
         }
@@ -36,7 +33,6 @@ export const fetchCategories = createAsyncThunk(
 
 
 
-// 2️⃣ Добавить новую категорию
 export const addCategory = createAsyncThunk(
     "categories/addCategory",
     async ({ name, userId }, thunkAPI) => {
@@ -50,7 +46,6 @@ export const addCategory = createAsyncThunk(
 );
 
 
-// 1) скрыть системную
 export const hideCategoryForUser = createAsyncThunk(
     "categories/hideCategoryForUser",
     async ({ userId, categoryId }, thunkAPI) => {
@@ -62,11 +57,9 @@ export const hideCategoryForUser = createAsyncThunk(
     }
 );
 
-// 2) удалить свою (пользовательскую)
 export const deleteCategory = createAsyncThunk(
     "categories/deleteCategory",
     async (categoryId, thunkAPI) => {
-        // здесь мы целиком удаляем строку из categories
         const { error } = await supabase
             .from("categories")
             .delete()
@@ -102,11 +95,9 @@ const categoriesSlice = createSlice({
         })
 
         .addCase(hideCategoryForUser.fulfilled, (state, action) => {
-            // просто удаляем из массива видимых категорий
             state.categories = state.categories.filter(c => c.id !== action.payload);
         })
         .addCase(deleteCategory.fulfilled, (state, action) => {
-            // удаляем из массива пользовательских
             state.categories = state.categories.filter(c => c.id !== action.payload);
         });
     },

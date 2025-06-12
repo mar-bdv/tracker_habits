@@ -7,7 +7,7 @@ const Layout = () => {
         <div className={styles.container}>
             <Navigation />
             <div className={styles.content}>
-                <Outlet /> {/* Здесь рендерятся страницы */}
+                <Outlet />
             </div>
         </div>
     );

@@ -11,19 +11,6 @@ const AddCategoryModal = ({ onClose, userId, userCategoriesCount }) => {
     
     const MAX_CATEGORIES = 5;
 
-
-    // const handleAdd = () => {
-    //     if (!name.trim()) return;
-
-    //     if (name.trim().length > 20) {
-    //         setError("Название не должно превышать 20 символов");
-    //         return;
-    //     }
-
-    //     dispatch(addCategory({ name: name.trim(), userId }));
-    //     onClose();
-    // };
-
     
     const handleAdd = () => {
         if (userCategoriesCount >= MAX_CATEGORIES) {
@@ -40,17 +27,6 @@ const AddCategoryModal = ({ onClose, userId, userCategoriesCount }) => {
         dispatch(addCategory({ name: name.trim(), userId }));
         onClose();
     };
-
-    // const handleChange = (e) => {
-    //     const value = e.target.value;
-    //     setName(value);
-
-    //     if (value.length > 20) {
-    //         setError("Название не должно превышать 20 символов");
-    //     } else {
-    //         setError("");
-    //     }
-    // };
 
     const handleChange = (e) => {
         const value = e.target.value;

@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { supabase } from '../supabaseClient';
 import { getLocalDateString } from '../utils/date';
 
-// Загрузка настроения на сегодня
+
 export const fetchTodayMood = createAsyncThunk(
     'moods/fetchTodayMood',
     async (userId) => {
@@ -14,28 +14,10 @@ export const fetchTodayMood = createAsyncThunk(
         .eq('date', today)
         .single();
 
-        if (error && error.code !== 'PGRST116') throw error; // PGRST116 = не найдено
+        if (error && error.code !== 'PGRST116') throw error;
         return data || null;
     }
 );
-
-// Отправка настроения
-// export const setTodayMood = createAsyncThunk(
-//     'moods/setTodayMood',
-//     async ({ userId, mood }) => {
-//         const today = getLocalDateString(new Date());
-
-//         // upsert — если есть, обновит; если нет — вставит
-//         const { data, error } = await supabase
-//         .from('moods')
-//         .upsert({ user_id: userId, mood, date: today }, { onConflict: ['user_id', 'date'] })
-//         .select()
-//         .single();
-
-//         if (error) throw error;
-//         return data;
-//     }
-// );
 
 
 export const setTodayMood = createAsyncThunk(
@@ -44,7 +26,6 @@ export const setTodayMood = createAsyncThunk(
         const today = getLocalDateString(new Date());
 
         if (mood === null) {
-            // Удаление настроения
             const { error } = await supabase
                 .from('moods')
                 .delete()
@@ -83,20 +64,6 @@ export const fetchMoodsByMonth = createAsyncThunk(
     }
 );
 
-// export const setMoodForDate = createAsyncThunk(
-//     'moods/setMoodForDate',
-//     async ({ userId, date, mood }, thunkAPI) => {
-//         await supabase
-//         .from('moods')
-//         .upsert([{ user_id: userId, date, mood }]);
-
-//         thunkAPI.dispatch(fetchMoodsByMonth({
-//         userId,
-//         year: new Date(date).getFullYear(),
-//         month: new Date(date).getMonth(),
-//         }));
-//     }
-// );
 
 export const setMoodForDate = createAsyncThunk(
     'moods/setMoodForDate',

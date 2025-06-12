@@ -43,7 +43,6 @@ export const addHabit = createAsyncThunk(
       return thunkAPI.rejectWithValue(error.message);
     }
 
-    // Вернём с названием категории
     const newHabit = data[0];
     return {
       ...newHabit,
@@ -52,9 +51,6 @@ export const addHabit = createAsyncThunk(
   }
 );
 
-
-
-// Удаление привычки
 export const deleteHabit = createAsyncThunk(
   "habits/deleteHabit",
   async (habitId, thunkAPI) => {
@@ -69,7 +65,6 @@ export const fetchHabits = createAsyncThunk(
   "habits/fetchHabits",
   async (userId, thunkAPI) => {
     try {
-      // 1️⃣ Получаем привычки вместе с категорией и выполнениями
       const { data: habits, error: habitsError } = await supabase
         .from("habits")
         .select(`
@@ -81,7 +76,6 @@ export const fetchHabits = createAsyncThunk(
 
       if (habitsError) throw habitsError;
 
-      // 2️⃣ Преобразуем массив habit_completions в объект completedDates
       const habitsWithDates = habits.map(habit => {
         const completedDates = (habit.habit_completions || []).reduce(
           (acc, { date }) => ({ ...acc, [date]: true }),
@@ -108,7 +102,6 @@ export const updateHabit = createAsyncThunk(
   async (habitData, thunkAPI) => {
     const { id, title, notes, deadline, user_id, category } = habitData;
 
-    // Найдём id категории по имени
     let categoryId = null;
 
     if (category) {
@@ -125,7 +118,6 @@ export const updateHabit = createAsyncThunk(
       categoryId = categories?.id || null;
     }
 
-    // Обновим привычку
     const { data, error } = await supabase
       .from("habits")
       .update({
@@ -134,7 +126,7 @@ export const updateHabit = createAsyncThunk(
         deadline,
         user_id,
         category_id: categoryId,
-        category: category, // можно оставить, если нужно дублирование для быстрого отображения
+        category: category,
       })
       .eq("id", id)
       .select(`
@@ -149,7 +141,6 @@ export const updateHabit = createAsyncThunk(
       return thunkAPI.rejectWithValue("Ошибка обновления привычки: " + error.message);
     }
 
-    // Вернём привычку с названием категории
     return {
       ...data,
       category: data.categories?.name || "",
@@ -164,7 +155,7 @@ export const toggleHabit = createAsyncThunk(
   async ({ userId, habitId, completed }, thunkAPI) => {
     const { data, error } = await supabase
       .from('habits')
-      .update({ completed }) // обновляем поле completed
+      .update({ completed })
       .eq('id', habitId)
       .eq('user_id', userId);
 
@@ -172,7 +163,7 @@ export const toggleHabit = createAsyncThunk(
       return thunkAPI.rejectWithValue(error.message);
     }
 
-    return { habitId, completed }; // возвращаем только нужное
+    return { habitId, completed };
   }
 );
 
@@ -187,12 +178,11 @@ export const toggleHabitForDate = createAsyncThunk(
       .select('*')
       .eq('user_id', userId)
       .eq('habit_id', habitId)
-      .eq('date', date);  // Проверяем, существует ли запись на эту дату
+      .eq('date', date);
 
     if (error) return thunkAPI.rejectWithValue(error.message);
 
     if (data.length > 0) {
-      // Если запись уже существует, удаляем её
       const { error: deleteError } = await supabase
         .from('habit_completions')
         .delete()
@@ -202,7 +192,7 @@ export const toggleHabitForDate = createAsyncThunk(
 
       await dispatch(updateUserStreak(userId));
 
-      return { habitId, date, completed: false }; // Выполнение убирается
+      return { habitId, date, completed: false };
     } else {
       // Если записи нет, добавляем новую
       const { error: insertError } = await supabase
@@ -213,7 +203,7 @@ export const toggleHabitForDate = createAsyncThunk(
       
       await thunkAPI.dispatch(updateUserStreak(userId));
 
-      return { habitId, date, completed: true }; // Выполнение добавляется
+      return { habitId, date, completed: true };
     }
   }
 );
@@ -225,7 +215,7 @@ export const fetchHabitCompletions = createAsyncThunk(
       .from('habit_completions')
       .select('*')
       .eq('user_id', userId)
-      .eq('date', date); // загружаем выполненные на конкретную дату
+      .eq('date', date);
 
     if (error) return thunkAPI.rejectWithValue(error.message);
     return data;
@@ -264,7 +254,6 @@ const habitsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // FETCH
       .addCase(fetchHabits.pending, (state) => {
         state.status = "loading";
       })
@@ -277,7 +266,6 @@ const habitsSlice = createSlice({
         state.error = action.payload;
       })
 
-      // ADD
       .addCase(addHabit.fulfilled, (state, action) => {
         state.habits.push(action.payload);
       })
@@ -289,7 +277,7 @@ const habitsSlice = createSlice({
         if (!updatedHabit) return;
         const index = state.habits.findIndex((h) => h.id === updatedHabit.id);
         if (index !== -1) {
-          state.habits[index] = updatedHabit; // Заменяем старую привычку на обновлённую
+          state.habits[index] = updatedHabit;
         }
       })
 
@@ -297,7 +285,7 @@ const habitsSlice = createSlice({
         const updatedHabit = action.payload;
         const index = state.habits.findIndex((h) => h.id === updatedHabit.id);
         if (index !== -1) {
-            state.habits[index] = updatedHabit; // Немедленно обновляем привычку в стейте
+            state.habits[index] = updatedHabit;
         }
       })
 

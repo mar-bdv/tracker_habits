@@ -11,12 +11,10 @@ const WelcomePage = () => {
     const handleDemoLogin = async () => {
         const resultAction = await dispatch(createDemoUser());
 
-        // Проверка, что демо-юзер был успешно создан
         if (createDemoUser.fulfilled.match(resultAction)) {
             navigate('/home');
         } else {
-            // Если нужно, можно показать ошибку (например, через toast или стейт)
-            console.error('Ошибка при создании демо-аккаунта:', resultAction.payload);
+            alert('Ошибка при создании демо-аккаунта:', resultAction.payload)
         }
     };
 
@@ -26,13 +24,11 @@ const WelcomePage = () => {
             <h1 className={styles.heading}>трекер привычек</h1>
             <div className={styles.options}>
                 <p className={styles.start_text}>Выберите, как хотите начать:</p>
-                {/* ИЗМЕНИТЬ ССЫЛКИ */}
                 <div className={styles.block_link}>
                     <motion.div
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.95 }}
                     >
-                        {/* <Link to="/home" className={styles.btn_link}>Войти в демо аккаунт</Link> */}
                         <button onClick={handleDemoLogin} className={styles.btn_link}>
                             Войти в демо аккаунт
                         </button>

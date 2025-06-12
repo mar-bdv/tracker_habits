@@ -96,12 +96,6 @@ export const Settings = () => {
                         >
                             Сбросить все привычки
                         </button>
-                        {/* <button 
-                            className={styles.del_btn}
-                            onClick={() => setShowDeleteModal(true)}
-                        >
-                            Снести аккаунт
-                        </button> */}
                     </div>
 
                     {showResetModal && (

@@ -1,4 +1,3 @@
-// import styles from "./Moods.module.scss";
 import { ReactComponent as OneMood } from '../../images/1_mood.svg';
 import { ReactComponent as TwoMood } from '../../images/2_mood.svg';
 import { ReactComponent as ThreeMood } from '../../images/3_mood.svg';
@@ -28,7 +27,7 @@ const Moods = ({ style, selectedMood, selectedDate }) => {
     };
 
 
-    const todayMood = useSelector(state => state.moods.todayMood?.mood); // от 1 до 5
+    const todayMood = useSelector(state => state.moods.todayMood?.mood);
     const selectedMoodValue = isTodayDate(selectedDate) ? todayMood : selectedMood;
 
     const handleClick = (index) => {

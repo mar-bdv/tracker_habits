@@ -94,15 +94,6 @@ const Home = () => {
 
                     <div className={styles.habits_list}>
                         <motion.div layout className={styles.habits}>
-                            {/* <AnimatePresence mode="sync">
-                                {filteredHabits.map(habit => (
-                                    <Habit
-                                        key={habit.id}
-                                        habit={habit}
-                                        selectedDate={dateStr}
-                                    />
-                                ))}
-                            </AnimatePresence> */}
                             <AnimatePresence mode="sync">
                                 {habits.length === 0 ? (
                                     <motion.p
